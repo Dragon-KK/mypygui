@@ -7,10 +7,6 @@
 - webcolors
 - pillow
 
-## opengl installation on windows
-
-<https://www.youtube.com/watch?v=a4NVQC_2S2U>
-
 ## html
 
 Any element that isn't supported will be treated like a div
