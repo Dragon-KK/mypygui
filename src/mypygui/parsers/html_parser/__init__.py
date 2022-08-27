@@ -3,6 +3,8 @@ from ...logging import console
 from collections import deque
 from ...util import Object
 from ...core import fs
+import unicodedata
+
 
 from html.parser import HTMLParser as HTMLParserBase
 class HTMLParser(HTMLParserBase):
