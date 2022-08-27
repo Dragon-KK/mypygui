@@ -1,0 +1,61 @@
+* {
+    position: static;
+    display: none;
+    color: black;
+}
+
+html{
+    overflow: scroll;
+    background-color: black;
+    font-size: 2vw;
+}
+
+img{
+    display: inline-block;
+    background-color: lightgray;
+}
+
+span{
+    display: text;
+    font-size: 1em;
+    font-weight: normal;
+    font-family: 'Montserrat';
+}
+
+html, body, div, form, h1, h2, h3, h4, h5, h6 {
+    display: block;
+}
+
+h1 {
+    font-size: 2em;
+    margin: .67em 0
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: .75em 0
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: .83em 0;
+    color: rgb(20, 02, 1);
+}
+
+h4 {
+    margin: 1.12em 0
+}
+
+h5 {
+    font-size: .83em;
+    margin: 1.5em 0
+}
+
+h6 {
+    font-size: .75em;
+    margin: 1.67em 0
+}
+
+button, input {
+    display: inline-block
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #2b2b2b;
+            min-height: 100vh;
+        }
+        img{
+            height: 10vh;
+            width: 10vh;
+        }
+        h1{
+            height: 2.5rem;
+            border-radius: 0.5em;
+            background-color: lightcoral;
+            margin: 5px 10px;
+            padding: 1rem;
+        }
+        h1:hover{
+            background-color: blueviolet;
+        }
+        .img-container{
+            position: relative;
+            overflow-x: scroll;
+            margin: 1rem;
+            background-color: #2b2b2b;
+        }
+        .h1-container{
+            background-color: #2b2b2b;
+            padding: 2rem;
+        }
+        .h1-container:hover{
+            background-color: #3c3c3c;
+        }
+        .img-wrapper{
+            display: inline;
+            padding: 0.2rem;
+            background-color: slategray;
+            border-radius: 0.2rem;
+            margin: 1rem;
+        }
+        span:hover{
+            font-weight: italic;
+            color: orangered;
+        }
+        
+    </style>
+    <py-script src="myscript.py" ></py-script>
+</head>
+<body>
+    <div class="img-container">
+        <div class="img-wrapper">
+
+            <img src="./resources/icon.png" alt="" persist srcset="">
+        </div>
+        <div class="img-wrapper">
+
+            <img src="./resources/Locked.jpg" alt="" persist srcset="">
+        </div>
+        <div class="img-wrapper">
+
+            <img src="./resources/Menu.png" alt="" persist srcset="">
+        </div>
+        <div class="img-wrapper">
+            
+            <img src="./resources/Restart.png" alt="" persist srcset="">
+        </div>
+        <!-- <img src="https://picsum.photos/1200" persist alt="">
+            <div class="img-wrapper"></div>
+            <img src="https://picsum.photos/1100" alt="">
+            <div class="img-wrapper"></div>
+            <img src="https://picsum.photos/1150" alt="">
+            <div class="img-wrapper"></div>
+        <img src="https://picsum.photos/1250" alt=""> -->
+    </div>
+    <div class="h1-container">
+        <h1>
+            <span>Hello!</span>
+        </h1>
+        <h1>
+            <span>Hello!</span>
+        </h1>
+        <h1>
+            <span>Hello!</span>
+        </h1>
+        <h1>
+            <span>Hello!</span>
+        </h1>
+        <h1>
+            <span>Hello!</span>
+        </h1>
+    </div>
+
+</body>
+</html>

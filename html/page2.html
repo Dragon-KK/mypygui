@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mah page</title>
+    <style>
+        body{
+            background-color: #2b2b2b;
+            min-height: 100vh;
+        }
+        img{
+            margin: 1em;
+            height: 60vh;
+            width: 60vh;
+        }
+        h1{
+            height: 2.5rem;
+            border-radius: 0.5em;
+            background-color: lightcoral;
+            margin: 5px 10px;
+        }
+        h1:hover{
+            background-color: blueviolet;
+        }
+        .img-container{
+            position: relative;
+            overflow-x: scroll;
+            margin: 1rem;
+            background-color: #2b2b2b;
+        }
+        .h1-container{
+            background-color: #2b2b2b;
+            padding: 2rem;
+        }
+        .h1-container:hover{
+            background-color: #1e1e1e;
+        }
+        .h1-container:hover-top{
+            background-color: #4b4b4b;
+        }
+    </style>
+    <py-script src="myscript2.py" ></py-script>
+</head>
+<body>
+    <div class="img-container">
+
+        <img src="https://picsum.photos/1200" persist alt="">
+        <img src="https://picsum.photos/1100" persist alt="">
+        <img src="https://picsum.photos/1150" persist alt="">
+        <img src="https://picsum.photos/1250" persist alt="">
+    </div>
+
+    
+</body>
+</html>
