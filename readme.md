@@ -17,7 +17,7 @@ Supported elements
 - img
 - span
 
-NOTE: Only text inside span elements are shown 
+NOTE: Only text inside span elements are shown
 
 ## CSS
 
