@@ -70,19 +70,15 @@ A list of all supported css properties
 ## Script
 
 All scripts will be executed globally
-
 Some dom apis will be given to the scripts
 
 ```html
-<pyscript src="./definitions.py"/>
-<pyscript src="./myscript.py"/>
+<py-script src="./definitions.py"/>
+<py-script src="./myscript.py"/>
 ```
 
 eg: `myscript.py`
 
 ```py
-#@py-ignore
-# Anything between consecutive py-ignore will not be executed at runtime
-# Use this space to import files for intellisense etc.
-#@py-ignore
+document.get_element_by_id('my-elem')
 ```
