@@ -14,6 +14,10 @@ Any element that isn't supported will be treated like a div
 Supported elements
 
 - input
+- img
+- span
+
+NOTE: Only text inside span elements are shown 
 
 ## CSS
 
