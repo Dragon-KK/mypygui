@@ -77,6 +77,15 @@ class Page:
         self.browser_window.resource_handler.reset()
         gc.collect()
 
+        # new_snap = self.browser_window.tracemalloc.take_snapshot()
+        # top_stats = new_snap.compare_to(self.browser_window.current_snapshot, 'lineno')
+
+        # print("[ Top 10 differences ]")
+        # for stat in top_stats[:15]:
+        #     print(stat)
+
+        # self.browser_window.current_snapshot = new_snap
+
     def end_application(self, reason = "Closed by script"):
         '''
         Closes the window

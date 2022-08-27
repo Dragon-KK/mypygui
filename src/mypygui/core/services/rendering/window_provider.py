@@ -24,6 +24,7 @@ class WindowProvider: # Does this need to be a service provider?
 
     def reset(self, root_render_node : RootRenderNode): # Resets the window provider
         '''Resets the window providers'''
+        self.main_composite.canvas.forget()
         self.main_composite.canvas.destroy()
         del self.main_composite.canvas
         del self.main_composite

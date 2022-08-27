@@ -225,6 +225,7 @@ class RenderNode(Object):
         if self.own_composite is not None:
             self.own_composite.canvas.unbind_all(ALL)
             self.own_composite.composited_element = None
+            self.own_composite.canvas.forget()
         if self.master is not None:
             self.master.remove_slave(self, self.dom_node.styles.z_index if self.dom_node.styles.z_index is not None else 1)
         if self.render_information.context is not None:
@@ -235,8 +236,10 @@ class RenderNode(Object):
         self.closest_relative = None
         self.master = None
         self.render_information.context = None
+        self._units.clear()
         self.render_information = None
         self.layout_information = None
+        self._window_provider = None
         
         self.master_composite = None
         self.own_composite = None

@@ -7,13 +7,14 @@ from ..core.asynchronous import Promise
 from ..logging import console
 from ..page import Page
 from ..core import fs
-
-
+# import tracemalloc
+# tracemalloc.start()
 class BrowserWindow:
     def __init__(
             self
         ):
-        
+        # self.tracemalloc = tracemalloc
+        # self.current_snapshot = tracemalloc.take_snapshot()
         #region Promises
         self.on_ready          = Promise()
         '''Resolved when the browserWindow has finished initializing'''

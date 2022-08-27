@@ -11,7 +11,7 @@ class LayoutHandler(ServiceProvider):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.window_provider : WindowProvider = None
-        
+
     def _get_request_key(self, args):
         return id(args[0])
 

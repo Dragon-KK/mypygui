@@ -25,4 +25,3 @@ class Event:
         self.opposite_direction = opposite_direction
         self.target = target
         self.info = Object(**info)
-
