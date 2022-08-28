@@ -46,5 +46,6 @@ class TextRenderNode(RenderNode):
 
 
     def __init__(self, *args, **kwargs):
+        # LIMIT: Figure out a way to auto detect line breaks
         super().__init__(*args, **kwargs)
         self.font = Font()
