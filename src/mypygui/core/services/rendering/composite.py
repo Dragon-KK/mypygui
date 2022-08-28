@@ -50,7 +50,7 @@ class Composite:
         '''Creates a text type of element (text)'''
         ctx = Context()
 
-        ctx.txt_token = self.canvas.create_text(render_information.x,render_information.y,text=text,fill=render_information.foregound_color,font=render_information.font, anchor=tk.NW,width=render_information.width, justify=tk.CENTER)
+        ctx.txt_token = self.canvas.create_text(render_information.x,render_information.y,text=text,fill=render_information.foregound_color,font=render_information.font, anchor=tk.NW)
         ctx.bnd_token = ctx.txt_token
         return ctx
 
@@ -60,7 +60,7 @@ class Composite:
             render_information.context.txt_token,
             render_information.x, render_information.y
         )
-        self.canvas.itemconfig(render_information.context.txt_token,text=text,fill=render_information.foreground_color,font=render_information.font, anchor=tk.NW,width=render_information.width, justify=tk.CENTER)
+        self.canvas.itemconfig(render_information.context.txt_token,text=text,fill=render_information.foreground_color,font=render_information.font, anchor=tk.NW)
 
         #self.update_text(render_information)
 

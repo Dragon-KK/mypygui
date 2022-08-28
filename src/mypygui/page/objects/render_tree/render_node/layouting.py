@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ... import RenderNode, DOMNode, RootRenderNode
 
+
 INF = float('inf')
 
 class layouter:
@@ -128,41 +129,32 @@ class layouter:
                 
         
         elif node.dom_node.styles.display == css.Display.text:
-            pass
-
+            node.render_information.foreground_color = node.dom_node.styles.color
+            node.render_information.font = (node.dom_node.styles.font_family, int(node.get_value(node.dom_node.styles.font_size, default=5)), node.dom_node.styles.font_weight)
+            node.font.config(family=node.render_information.font[0], size=node.render_information.font[1], weight=node.render_information.font[2])
             
-            # TODO: So the tkinter thing has a pretty convinient text feature
-            # But.... we need this in the layout function itself
-            # So figure out a way to use this tkinter text sizing and normalizing in the layout function :)
+            content_width=0
+            content_height=0
+            if node is not skip_node:
+                layouter.set_layout_information(node)
+                xs = node.dom_node.content.splitlines()
+                if xs:
+                    content_width = max(node.font.measure(i) for i in xs)
+                    content_height = node.font.metrics('linespace') * (node.dom_node.content.count('\r') + 1)
 
-            # figure out wth this code does lmao
-            # f=self.canvas.itemcget(myText, "font") font = tk.font.Font(font=font.split(" ")) height = font.metrics("linespace")
+            node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
+            node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
+            
+            if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
+            content_size = (content_width, content_height) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
+            node.layout_information.content_height = content_size[1]
+            node.layout_information.content_width = content_size[0]
+            node.layout_information.width = node.layout_information.content_width + node.layout_information.padding_left + node.layout_information.padding_right + 2 * node.layout_information.border_width
+            node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
+            if node is not skip_node:layouter.validate_size(node) # Validate the size
+            node.layout_information.content_size_height = content_size[1]
+            node.layout_information.content_size_width = content_size[0]
 
-
-
-
-
-
-
-
-
-
-
-
-
-            # How do i want text to work?
-            # Cases: 
-            # Parent size is set (then we give the text calculator this info and he will add \n to ensure this)
-            # In between cases (if width was set then pretty much same as before) (If only height was set then nothing can be done (same as next cases))
-            # Parent size is not set (The text will take as much as it wants in horizontal direction)
-        
-            # Also keep in mind how updating text is going to work
-            # Just call a reflow on the span?
-
-            # If there is inbuilt functionality just use it
-
-            # Useful feature
-            # Allow for a linecount, so sthe text calculator will keep this suggested line count in mind while calculating shit
         else:
             raise NotImplementedError('Unhandled display type', node.dom_node.styles.display)
         #endregion

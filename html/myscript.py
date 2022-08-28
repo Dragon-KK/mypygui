@@ -63,10 +63,23 @@ page_closed.then(release)
 
 # xs.event_emitter.subscribe(Event.Types.key_press, lambda e:print(e.info._e.char))
 
-def abc(elem, txt):
+def abc(parent, elem, txt):
+    if 'hover' not in parent.state:return
+    if txt == '':
+        return
 
-    elem.content += txt
-    elem.content
+    o = ord(txt)
+
+    if o == 8:
+        elem.content = elem.content[:-1]
+    elif o == 22:
+        txt = clipboard.get()
+        elem.content += txt
+    elif o == 3:
+        clipboard.set(elem.content)
+    else:
+        # print(ord(txt))
+        elem.content += txt
     elem.render_node.request_reflow()
 
 def handle(elem):
@@ -76,7 +89,7 @@ def handle(elem):
 def handle2(elem):
     elem.event_emitter.subscribe(Event.Types.click, lambda e:elem.remove())
     # TODO: Provide some basic functions to user to allow them to update text on a dom element :)
-    elem.children[0].event_emitter.subscribe(Event.Types.key_press, lambda e:abc(elem.children[0], e.info._e.char))
+    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:abc(elem, elem.children[0], e.info._e.char))
 for elem in elems:
     handle(elem)
 for elem in elems2:

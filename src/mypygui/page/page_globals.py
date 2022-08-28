@@ -22,5 +22,6 @@ def get_globals(page):
         'Image' : Image,
         'redirect' : page.redirect,
         'end_application' : page.end_application,
-        'page_closed' : Promise()
+        'page_closed' : Promise(),
+        'clipboard' : page.clipboard
     }

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from .node import RenderNode
-
+from tkinter.font import Font
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from .....core.services.rendering import Composite
@@ -10,12 +10,6 @@ from .....core.services.events import Event
 class TextRenderNode(RenderNode):
     '''Deals with thte layouting and painting of text'''
     __ignore__ = {'dom_node', 'slaves', 'master'}
-
-    def _set_render_information(self):
-        super()._set_render_information()
-        self.render_information.foreground_color = self.dom_node.styles.color
-        self.render_information.font = (self.dom_node.styles.font_family, int(self.get_value(self.dom_node.styles.font_size, default=5)), self.dom_node.styles.font_weight)
-
     def paint(self, composite : Composite):
         '''Paints the thing onto the thingy'''
         if self.dom_node is None or not self.dom_node._visible:return
@@ -53,18 +47,4 @@ class TextRenderNode(RenderNode):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # BRUHHHHHHHHHHHHHHHHHHHHHHHH
-        
-        # Do the layout function
-
-        # * After every text update, a reflow must be called :)
-
-        # Figure out how you want ot do the shit
-
-        # Force evrything to be highly implicit?
-
-
-        # Do the paint and repaint function :)
-        
-
-        # What else is left ?
+        self.font = Font()

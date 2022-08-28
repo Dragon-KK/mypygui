@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..browser_window import BrowserWindow
 
 from ..core.asynchronous import asyncify
-
+from .clipboard import ClipBoard
 
 class Page:
     def __init__(
@@ -36,6 +36,8 @@ class Page:
         self.uri = uri
         '''The uri'''
         self.scripts = scripts
+
+        self.clipboard = ClipBoard(browser_window.window_provider.root)
 
         from .page_globals import get_globals
         self.script_globals = get_globals(self)
