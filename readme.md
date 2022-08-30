@@ -1,5 +1,7 @@
 # mypygui
 
+github repo:<https://github.com/Dragon-KK/mypygui>
+
 ## Dependencies
 
 - python >= 3.8

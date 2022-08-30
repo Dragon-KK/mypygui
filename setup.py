@@ -3,9 +3,13 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("__version__.ignore", "r") as fh:
+    version = fh.read()
+
+
 setuptools.setup(
     name="mypygui",                     # This is the name of the package
-    version="0.0.4",                        # The initial release version
+    version=version,                        # The initial release version
     author="Dragon-KK",                     # Full name of the author
     description="Render basic html in python",
     long_description=long_description,      # Long description read from the the readme file
