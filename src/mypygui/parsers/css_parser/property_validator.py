@@ -229,7 +229,7 @@ def border(values : list) -> dict[css.PropertyName, css.Value]:
     succesful, colors, literals, dimensions = expect(values, 'border', (
         (VALUE.color, 1, True),
         (VALUE.literal, 1, True),
-        (VALUE.dimension, 1, True),
+        (VALUE.size, 1, True),
     ))
     if not succesful:return {}
 

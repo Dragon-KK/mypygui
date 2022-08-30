@@ -102,7 +102,6 @@ class BrowserWindow:
         
         # Run scripts
         self.active_page.run_scripts() # This is async
-        console.warn('Go through all limits and todos and finish them')
         
         promise = Promise()
         promise.resolve(True)
