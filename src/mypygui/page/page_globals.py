@@ -5,12 +5,13 @@ from .objects.dom.dom_node import ClassList
 from ..core.services.events import Event
 from ..page.objects.image_container import Image
 from ..core import fs
-
+from ..util import Object
 def get_globals(page):
     return {
         'document' : page.dom,
         'DOMNode' : DOMNode,
         'Promise' : Promise,
+        'Object' : Object,
         'Event' : Event,
         'ClassList' : ClassList,
         'console' : console,
@@ -23,5 +24,6 @@ def get_globals(page):
         'redirect' : page.redirect,
         'end_application' : page.end_application,
         'page_closed' : Promise(),
-        'clipboard' : page.clipboard
+        'clipboard' : page.clipboard,
+        'tmp_store' : page.browser_window.tmp_store
     }

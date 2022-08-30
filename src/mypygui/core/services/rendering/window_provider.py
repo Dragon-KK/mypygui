@@ -8,9 +8,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ....page.objects import RenderNode, RootRenderNode
     from ..layout_managing import LayoutHandler
-
-import ctypes 
-ctypes.windll.shcore.SetProcessDpiAwareness(True)
+try:
+    import ctypes # Only windows 9 and above allows this
+    ctypes.windll.shcore.SetProcessDpiAwareness(True)
+except:pass
 
 class WindowProvider: # Does this need to be a service provider? 
     def __init__(self, layout_handler : LayoutHandler):

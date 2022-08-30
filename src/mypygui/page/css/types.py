@@ -20,7 +20,6 @@ class Unit(Enum):
     self_height      = Enum.auto()
     self_width       = Enum.auto()
 
-
 #region Property
 PropertyName = str
 '''The name of the css property'''
@@ -29,6 +28,7 @@ class ValueType(Enum):
     dimension = Enum.auto()
     number = Enum.auto()
     string = Enum.auto()
+
 CSSStringValue = str
 '''A string'''
 ColorValue = str

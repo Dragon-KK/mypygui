@@ -101,5 +101,9 @@ for elem in elems2:
     handle2(elem)
 for elem in elems3:
     handle3(elem)
+if tmp_store.abc is None:
+    tmp_store.abc = 1
+else:
+    tmp_store.abc += 1
 
-
+print(tmp_store)

@@ -66,6 +66,7 @@ class RootRenderNode(RenderNode):
         self.dom_node.event_emitter.subscribe(Event.Types.scroll, lambda e:self._scroll_event_handler(e))
         self.own_composite = self._window_provider.main_composite
         self.own_composite.canvas.bind('<MouseWheel>', lambda e:self.dom_node.event_emitter.dispatch(Event(Event.Types.scroll, self.dom_node, False, _e = e)) if self.dom_node else 0)
+        self.own_composite.canvas.master.bind('<FocusIn>', lambda e:self.request_reflow)
         self._window_provider.main_composite.canvas.bind('<Configure>', lambda e:self.dom_node.event_emitter.dispatch(Event(Event.Types.resize, self.dom_node, False, _e = e)) if self.dom_node else 0)
         self.dom_node.event_emitter.subscribe(Event.Types.resize, lambda e:self.request_reflow())
         

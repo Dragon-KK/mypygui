@@ -20,9 +20,9 @@ class ImageRenderNode(RenderNode):
             def set_image(r):
                 self.image = Image(r)
                 if self.render_information is None:return
+                # TODO: Some errors occur sometimes when this part has to be done (i think its because of some case where the image is resolved like little fast but not too fast also)
                 if self.render_information.context is not None: # If the image was loaded after the initial paint we must update the image
                     self.after_layout() # LIMIT: Move this to the layouting stage cause this will cause slowdowns (will it tho? cause the promise is fulfilled in the resource request loop)
-                    
                     self.repaint()
             self.dom_node.image.then(set_image)
 
@@ -70,8 +70,8 @@ class ImageRenderNode(RenderNode):
             self.paint(self.master.master_composite if not self.master.needs_composite else self.master.own_composite)
             return
         if self.render_information.context.img_token == -1 and self.image is not None:
-            self.master_composite.delete_element(self.render_information.context)
-            self.paint(self.master_composite)
+            self.master_composite.delete_element(self.render_information.context) if self.master_composite else 0
+            self.paint(self.master.master_composite if not self.master.needs_composite else self.master.own_composite)
             return
 
         self._set_render_information()

@@ -5,6 +5,7 @@ from ..core.services.events import EventHandler
 from ..core.services.worker import Worker
 from ..core.asynchronous import Promise
 from ..logging import console
+from ..util import Object
 from ..page import Page
 from ..core import fs
 # import tracemalloc
@@ -45,6 +46,9 @@ class BrowserWindow:
 
         self.event_handler = EventHandler()
         '''Entity that deals with handling dom events'''
+
+        self.tmp_store = Object()
+        '''A dictionary that persists between page loads'''
 
         try:
             self.window_provider.run() # Start the window provider
@@ -126,3 +130,15 @@ class BrowserWindow:
         else:
             console.error('Tried to end the application when the window provider has already ended')
             self._on_window_provider_end(reason)
+
+    def execute_snippet(self, code_snippet,_locals, src = 'devtools'):
+        '''Runs a code snippet on the active page'''
+        if self.on_close.state != Promise.ONGOING:return
+        if self.active_page is None:
+            console.warn("Scripts run when no page is open will not be able to store like values ykwim?")
+            try:
+                exec(code_snippet, _locals)
+            except Exception as e:
+                print(e)
+            return
+        self.active_page.run_script((src, code_snippet))

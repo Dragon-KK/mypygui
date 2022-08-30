@@ -35,7 +35,7 @@ class ResourceHandler(ServiceProvider):
         except Exception as e:
             import traceback
             traceback.print_exc()
-            # promise.cancel(e)
+            promise.cancel(e)
 
     def reset(self):
         '''

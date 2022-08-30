@@ -7,10 +7,12 @@ from ...core.asynchronous import Promise
 from ...page.clipboard import ClipBoard
 from ...core.fs import URI, FileType
 from ...logging import console
+from ...util import Object
 document : DOM
 resource_handler : ResourceHandler
 clipboard : ClipBoard
 page_closed : Promise
+tmp_store : Object
 def reload_page():
     '''
     Basically closes the page and shows it again (after reloading it)
