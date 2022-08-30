@@ -6,7 +6,7 @@
         {
             "label": "run",
             "type": "shell",
-            "command": "cd \"${workspaceFolder}\\src\" & python test.py",
+            "command": "cd \"${workspaceFolder}\" & python test.py",
             "problemMatcher": [],
             "group": {
                 "kind": "build",

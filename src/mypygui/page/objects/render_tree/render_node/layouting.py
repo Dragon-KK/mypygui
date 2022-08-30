@@ -35,6 +35,16 @@ class layouter:
             return layouter.reflow_node(node.master_composite.composited_element, node)
 
     @staticmethod
+    def set_render_info_size(node):
+        node.render_information.height = node.layout_information.height
+        node.render_information.width = node.layout_information.width
+
+    @staticmethod
+    def set_render_info_position(node):
+        node.render_information.x = (node.master.render_information.x if not node.master.needs_composite else 0) + node.layout_information.offset_x + node.master.layout_information.border_width + (node.master.layout_information.padding_left if node.master.dom_node is node.dom_node.parent else 0) + node.layout_information.x
+        node.render_information.y = (node.master.render_information.y if not node.master.needs_composite else 0) + node.layout_information.offset_y + node.master.layout_information.border_width + (node.master.layout_information.padding_top if node.master.dom_node is node.dom_node.parent else 0) + node.layout_information.y
+    
+    @staticmethod
     def layout_node(
         node : RenderNode,
 
@@ -60,6 +70,13 @@ class layouter:
         next_on_new_line = False
         #region get sizes based on display
         if node is not skip_node:node.layout_information.reset()
+
+        #region offset positions based on position
+        if node.dom_node.styles.position != css.Position.static: # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
+            layouter.set_offset(node)
+        #endregion
+        
+
         if node.dom_node.styles.display == css.Display.none: # If the element doesnt have to be displayed, just return since it doesnt have to be layouted
             node.dom_node._visible = False
             return (0, 0), (0, 0), (0, 0), False, False
@@ -73,6 +90,10 @@ class layouter:
                 
 
             if node is not skip_node:layouter.validate_size(node) # Validate the size
+            node.layout_information.x = node.layout_information.margin_left
+            node.layout_information.y = next_vertical_position + max(node.layout_information.margin_top - next_line_provided_margin_top, 0)
+            
+            layouter.set_render_info_position(node)
             content_size = layouter.layout_children(node, node.layout_information.content_width, skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height) # Layout the children
             if node.layout_information.height is None: # Implicitly set the height if needed
                 node.layout_information.content_height = content_size[1]
@@ -82,8 +103,6 @@ class layouter:
             node.layout_information.content_size_width = content_size[0]
             node.layout_information.content_size_height = content_size[1]
 
-            node.layout_information.x = node.layout_information.margin_left
-            node.layout_information.y = next_vertical_position + max(node.layout_information.margin_top - next_line_provided_margin_top, 0)
             is_on_new_line = True
             next_on_new_line = True
 
@@ -92,7 +111,7 @@ class layouter:
             
             node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
             node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
-            
+            layouter.set_render_info_position(node)
             if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
             content_size = layouter.layout_children(node, node.layout_information.content_width if node.layout_information.content_width is not None else (line_end - node.layout_information.x), skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
             node.layout_information.content_height = content_size[1]
@@ -108,7 +127,7 @@ class layouter:
             
             node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
             node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
-            
+            layouter.set_render_info_position(node)
             if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
                 node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right - suggested_horizontal_position if node.master.layout_information.content_width is not None and node.master.layout_information.content_width > 0 else 0
                 node.layout_information.content_width  = node.layout_information.width - (2 * node.layout_information.border_width) - node.layout_information.padding_left - node.layout_information.padding_right if node.layout_information.width else 0        
@@ -135,6 +154,9 @@ class layouter:
             
             content_width=0
             content_height=0
+            node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
+            node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
+            layouter.set_render_info_position(node)
             if node is not skip_node:
                 layouter.set_layout_information(node)
                 xs = node.dom_node.content.splitlines()
@@ -142,8 +164,6 @@ class layouter:
                     content_width = max(node.font.measure(i) for i in xs)
                     content_height = node.font.metrics('linespace') * (node.dom_node.content.count('\r') + 1)
 
-            node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
-            node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
             
             if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
             content_size = (content_width, content_height) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
@@ -159,11 +179,9 @@ class layouter:
             raise NotImplementedError('Unhandled display type', node.dom_node.styles.display)
         #endregion
 
-        #region offset positions based on position
-        if node.dom_node.styles.position != css.Position.static: # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
-            layouter.set_offset(node)
-        #endregion
+        
         node.dom_node._visible = True
+        layouter.set_render_info_size(node)
         node.after_layout()
         return (
             (node.layout_information.x, node.layout_information.y),

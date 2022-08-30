@@ -1,4 +1,4 @@
-import mypygui
+from src import mypygui
 
 browser_window = mypygui.BrowserWindow()
 

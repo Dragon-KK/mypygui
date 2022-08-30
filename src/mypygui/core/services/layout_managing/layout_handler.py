@@ -16,8 +16,8 @@ class LayoutHandler(ServiceProvider):
         return id(args[0])
 
     def _provide_service(self, request_key, args : tuple, promise : Promise):
-        del self.acknowledged_requests[request_key]
         try:
+            del self.acknowledged_requests[request_key]
             to_be_painted_element = layouter.reflow_node(args[0])
             self.window_provider.call(to_be_painted_element.repaint)
         except Exception as e:

@@ -88,7 +88,6 @@ def handle(elem):
     
 def handle2(elem):
     elem.event_emitter.subscribe(Event.Types.click, lambda e:elem.remove())
-    # TODO: Provide some basic functions to user to allow them to update text on a dom element :)
     elem.event_emitter.subscribe(Event.Types.key_press, lambda e:abc(elem, elem.children[0], e.info._e.char))
 for elem in elems:
     handle(elem)

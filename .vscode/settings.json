@@ -8,5 +8,5 @@
         "**/Thumbs.db": true,
         "**/__pycache__" : true
     },
-    "todo-tree.tree.scanMode": "workspace only"
+    "todo-tree.tree.scanMode": "workspace"
 }

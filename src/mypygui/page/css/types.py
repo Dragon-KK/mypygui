@@ -32,7 +32,7 @@ class ValueType(Enum):
 CSSStringValue = str
 '''A string'''
 ColorValue = str
-'''# LIMIT Only hex colors supported for now (for the renderer)'''
+'''# Only hex colors supported for now (for the renderer)'''
 NumberValue = float
 '''A numerical value'''
 DimensionalValue = Tuple[float, Unit]
