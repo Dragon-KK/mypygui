@@ -3,6 +3,7 @@ if [%1] == [] goto invalid-args
 
 echo 0.0.%1 > __version__.ignore
 del /Q dist
+del /Q build
 python setup.py sdist bdist_wheel
 python -m twine upload dist/*
 exit 0
