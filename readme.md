@@ -4,11 +4,12 @@ github repo:<https://github.com/Dragon-KK/mypygui>
 
 ## Dependencies
 
-- python >= 3.8
-- tinycss2
-- webcolors
-- pillow
-- colorama
+- python >= 3.10
+- pillow >= 9.1.0
+- tinycss2 >= 1.1.1
+- webcolors >= 1.12
+- colorama >= 0.4.4
+- requests >= 2.28.1
 
 ## html
 
