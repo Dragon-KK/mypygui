@@ -20,5 +20,6 @@ browser_window.on_ready\
 ).catch(
     lambda r: mypygui.logging.console.error('On ready error', r)
 )
-
+# from mypygui.tools.dev_console import run_dev_console
+# run_dev_console(browser_window, my_uri.parent)
 mypygui.logging.console.info('Closed because of',browser_window.on_close.await_result())

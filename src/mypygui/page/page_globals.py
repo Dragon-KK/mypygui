@@ -6,9 +6,11 @@ from ..core.services.events import Event
 from ..page.objects.image_container import Image
 from ..core import fs
 from ..util import Object
+from ..tools import validate_text_input
 def get_globals(page):
     return {
         'document' : page.dom,
+        'validate_text_input' : validate_text_input,
         'DOMNode' : DOMNode,
         'Promise' : Promise,
         'Object' : Object,

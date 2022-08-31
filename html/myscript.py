@@ -55,45 +55,26 @@ def on_click(e):
 
 elems2 = document.get_elements_by_tag_name('h1')
 elems3 = document.get_elements_by_class_name('myspan')
+
 def release(*args):
-    global elems, xs, elems2
+    global elems, xs, elems2, elems3
     xs = None
     elems = None
     elems2 = None
     elems3 = None
+
 page_closed.then(release)
 
-# xs.event_emitter.subscribe(Event.Types.key_press, lambda e:print(e.info._e.char))
-
-def abc(parent, elem, txt):
-    if 'hover' not in parent.state:return
-    if txt == '':
-        return
-
-    o = ord(txt)
-
-    if o == 8:
-        elem.content = elem.content[:-1]
-    elif o == 22:
-        txt = clipboard.get()
-        elem.content += txt
-    elif o == 3:
-        clipboard.set(elem.content)
-    else:
-        # print(ord(txt))
-        elem.content += txt
-    elem.render_node.request_reflow()
 
 def handle(elem):
-
     elem.event_emitter.subscribe(Event.Types.click, on_click)
     
 def handle2(elem):
     elem.event_emitter.subscribe(Event.Types.click, lambda e:elem.remove())
-    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:abc(elem, elem.children[0], e.info._e.char))
+    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:validate_text_input(e, elem.children[0], validation_function=lambda e:'hover' in e.parent.state))
 
 def handle3(elem):
-    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:abc(elem, elem, e.info._e.char))
+    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:validate_text_input(e, elem))
 
 for elem in elems:
     handle(elem)

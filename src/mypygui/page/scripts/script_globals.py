@@ -8,6 +8,7 @@ from ...page.clipboard import ClipBoard
 from ...core.fs import URI, FileType
 from ...logging import console
 from ...util import Object
+from ...tools import validate_text_input
 document : DOM
 resource_handler : ResourceHandler
 clipboard : ClipBoard
