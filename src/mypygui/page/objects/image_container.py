@@ -1,8 +1,7 @@
-import cv2
-import numpy
 import PIL.Image
 import PIL.ImageTk
 from math import ceil
+from ...logging import console
 
 class Image:
     '''Ye'''
@@ -31,4 +30,8 @@ class Image:
     @staticmethod
     def handle_resource_request(data):
         from io import BytesIO
-        return PIL.Image.open(BytesIO(data))
+        try:
+            return PIL.Image.open(BytesIO(data))
+        except:
+            console.warn('Image data did not come :(')
+            return PIL.Image.new('RGB', (0, 0))

@@ -28,6 +28,8 @@ setuptools.setup(
     install_requires=[
         "pillow >= 9.1.0",
         "tinycss2 >= 1.1.1",
-        "webcolors >= 1.12"
+        "webcolors >= 1.12",
+        "colorame >= 0.4.5",
+        "requests >= 2.28.1"
     ]                    # Install other dependencies if any
 )

@@ -8,6 +8,7 @@ github repo:<https://github.com/Dragon-KK/mypygui>
 - tinycss2
 - webcolors
 - pillow
+- colorama
 
 ## html
 

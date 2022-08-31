@@ -1,5 +1,4 @@
 from types import SimpleNamespace
-from fastenum import Enum as FastEnum
 
 _i = 0
 
