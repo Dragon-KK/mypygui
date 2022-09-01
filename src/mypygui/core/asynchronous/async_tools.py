@@ -5,7 +5,7 @@ from threading import Thread, Event
 from ...logging import console
 
 class Signal(Event):
-    '''A renaming of the threading.Event'''
+    '''Basically just threading.Event'''
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -14,8 +14,11 @@ class Promise:
 
     #region constants
     ONGOING = 0
+    '''The state of a promise which has not been resolved or cancelled'''
     SUCCESS = 1
+    '''The state of a promise which has been resolved'''
     FAILURE = 2
+    '''The state of a promise which has been cancelled'''
     #endregion
 
     def __init__(self):
@@ -23,10 +26,13 @@ class Promise:
         '''The state of the promise'''
 
         self._success_handlers = set()
+        '''Set of all functions subscribed to promise resolution'''
+
         self._error_handlers  = set()
+        '''Set of all functions subscribed to promise cancellaion'''
 
         self.result = None
-        '''The result of the promise'''
+        '''The resolved value or the cancellation reason'''
 
     def resolve(self, result : any):
         '''Resolves the promise'''
@@ -73,9 +79,14 @@ class Promise:
 
     def then(self, callback : callable, provide_purity = False) -> Promise:
         '''
-        Subscribes to the promise
-        NOTE: The callback function must take in a single parameter which will contain the result of the promise
-        NOTE: Set `provide_purity` to True to get an additional parameter called `purity` which is set to False if the Promise was resolved before being subscribed to
+        Subscribes to the resolution of the promise
+        Parameters:
+            callback : (result, purity?)
+                NOTE: The purity is only given if `provide_purity` was set to True
+            provide_purity : bool
+                Set to True to know if the promise was resolved before the 'then' method was applied on it
+        Returns:
+            The same promise
         '''
         if self.state == Promise.ONGOING:
             self._success_handlers.add((callback, provide_purity))
@@ -88,9 +99,14 @@ class Promise:
 
     def catch(self, callback : callable, provide_purity = False) -> Promise:
         '''
-        Catches any errors or cancellations that arise
-        NOTE: The callback function must take in a single parameter which will contain the reason for the cancellation
-        NOTE: Set `provide_purity` to True to get an additional parameter called `purity` which is set to False if the Promise was resolved before being subscribed to
+        Subscribes to the cancellation of the promise
+        Parameters:
+            callback : (reason, purity?)
+                NOTE: The purity is only given if `provide_purity` was set to True
+            provide_purity : bool
+                Set to True to know if the promise was resolved before the 'catch' method was applied on it
+        Returns:
+            The same promise
         '''
         if self.state == Promise.ONGOING:
             self._error_handlers.add((callback, provide_purity))
@@ -102,7 +118,7 @@ class Promise:
         return self
 
     def await_result(self):
-        '''Will hold the thread until the promise has been fulfilled or cancelled'''
+        '''Holds the thread till the promise has been cancelled or resolved'''
         result = Signal()
         self.then(lambda r: result.set()).catch(lambda r: result.set())
         result.wait()

@@ -1,0 +1,21 @@
+site_name: mypygui
+theme:
+    name: readthedocs
+    highlightjs: true
+nav:
+  - Home : 'index.md'
+  - User Guide :
+      - Getting Started : 'user-guide/getting-started.md'
+  - Objects :
+      - Browser Window : 'objects/browser-window.md'
+      - Page : 'objects/page.md'
+  - Utilities :
+      - Asynchronous : 'utilities/asynchronous.md'
+      - File System : 'utilities/fs.md'
+  - Services :
+      - Resource Handling : 'services/resource_handling.md'
+      - Events : 'services/events.md'
+      - Rendering : 'services/rendering.md'
+      - Worker : 'services/worker.md'
+      - Layout Managing : 'services/layout_managing.md'
+      - Service Provider : 'services/service_provider.md' 

@@ -2,7 +2,7 @@ from src import mypygui
 
 browser_window = mypygui.BrowserWindow()
 
-my_uri = mypygui.fs.URI.from_local_path_string(__file__).parent.join('html', 'index.html')
+my_uri = mypygui.fs.URI.from_local_path_string(__file__).parent.join('examples/html', 'index.html')
 browser_window.on_ready\
 .then(
     lambda _: browser_window.load_page(

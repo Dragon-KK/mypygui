@@ -28,7 +28,7 @@ class URI:
         '''The path pertaining to the uri'''
         
         self.queries = queries
-        '''Queries asked in the uri'''
+        '''Queries in the uri'''
         self.fragment = fragment
         '''Fragments of the uri'''
 
@@ -44,14 +44,30 @@ class URI:
         )
 
     def make(self, uri_string : str):
-        # LIMIT Improve this
+        '''
+        Creates a new uri relative to the current uri
+        NOTE: This function keeps in mind that http and file uris have to be handled differently
+        NOTE: This function is used by mypygui to handle urls present in the html
+        Parameters:
+            uri_string : str
+                The uri_string (or partial uri string in the case of local url)
+        Returns:
+        The uri that was made (a uri relative to the current one)
+        '''
+        # TODO Improve this
         if uri_string.strip()[:4] == 'http':
             return URI.from_uri_string(uri_string)
 
         return self.join(uri_string)
 
     def join(self, *parts) -> URI:
-        '''Returns a new merged uri'''
+        '''
+        Creates a new uri based on the parts given
+        Parameters:
+            *parts : [...str]
+        Returns:
+        The joined URI
+        '''
         
         return URI(
             self.schema,
@@ -67,7 +83,16 @@ class URI:
 
     @classmethod
     def from_uri_string(cls, uri : str, _resolve_path = False):
-        '''Forms the uri using a string'''
+        '''
+        Forms the uri using a string
+        Parameters:
+            uri : str
+                The string representation of the uri
+            _resolve_path : bool
+                Resolves the path of the given uri if set to true (False by default )
+        Returns:
+        A uri from the string
+        '''
         parsed = urlparse(uri)
         xs = cls(
             _schema_from_str(parsed.scheme),
@@ -86,6 +111,11 @@ class URI:
         '''
         Forms a uri using a path to the given local resource
         NOTE: The paths must be absolute paths
+        Parameters:
+            path : str
+                The absolute path
+        Returns:
+        A uri from the string
         '''
         return URI.from_uri_string('file://' + normpath(path), _resolve_path = True)
 
