@@ -1,6 +1,7 @@
 # mypygui
 
 github repo:<https://github.com/Dragon-KK/mypygui>
+documentation:<https://dragon-kk.github.io/mypygui/>
 
 ## Dependencies
 
