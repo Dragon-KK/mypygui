@@ -50,7 +50,7 @@ class Composite:
         '''Creates a text type of element (text)'''
         ctx = Context()
 
-        ctx.txt_token = self.canvas.create_text(render_information.x,render_information.y,text=text,fill=render_information.foregound_color,font=render_information.font, anchor=tk.NW)
+        ctx.txt_token = self.canvas.create_text(render_information.x + render_information.offset_x,render_information.y + render_information.offset_y,text=text,fill=render_information.foregound_color,font=render_information.font, anchor=tk.NW)
         ctx.bnd_token = ctx.txt_token
         return ctx
 
@@ -58,7 +58,7 @@ class Composite:
         '''Updates a box element'''
         self.canvas.coords(
             render_information.context.txt_token,
-            render_information.x, render_information.y
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y
         )
         self.canvas.itemconfig(render_information.context.txt_token,text=text,fill=render_information.foreground_color,font=render_information.font, anchor=tk.NW)
 
@@ -80,53 +80,53 @@ class Composite:
         '''NOTE: Composited elements are treated as box elements but border radius is not applied'''
         ctx = Context()
         canvas = tk.Canvas(scrollregion=(0, 0, max(node.layout_information.content_size_width, 1), max(1, node.layout_information.content_size_height)),closeenough=0,highlightthickness=0, borderwidth=0, yscrollincrement=1, xscrollincrement=1, background=node.render_information.background_color if node.render_information.background_color else 'black')
-        ctx.bnd_token = self.canvas.create_window(node.render_information.x, node.render_information.y, window = canvas, width = max(1, node.render_information.width), height = max(1, node.render_information.height), anchor=tk.NW)
+        ctx.bnd_token = self.canvas.create_window(node.render_information.x + node.render_information.offset_x, node.render_information.y + node.render_information.offset_y, window = canvas, width = max(1, node.render_information.width), height = max(1, node.render_information.height), anchor=tk.NW)
         return Composite(canvas, node), ctx
 
     def update_composite_element(self, node : RenderNode):
         '''Updates the composite'''
         self.canvas.coords(
             node.render_information.context.bnd_token,
-            node.render_information.x, node.render_information.y
+            node.render_information.x + node.render_information.offset_x, node.render_information.y + node.render_information.offset_y
         )
         self.canvas.itemconfig(node.render_information.context.bnd_token, width = max(1, node.render_information.width), height = max(1, node.render_information.height))
         node.own_composite.canvas.config(scrollregion=(0, 0, max(node.layout_information.content_size_width, 1), max(1, node.layout_information.content_size_height)), background=node.render_information.background_color if node.render_information.background_color else 'black')
     
     def paint_image(self, render_information : RenderInformationContainer, image : Image) -> int:
         return self.canvas.create_image(
-            render_information.x, render_information.y, anchor=tk.NW, image = image.photo_image
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y, anchor=tk.NW, image = image.photo_image
         )
 
     def update_image(self, render_information : RenderInformationContainer, image : Image) -> int:
         self.canvas.coords(
             render_information.context.img_token,
-            render_information.x, render_information.y
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y
         )
         self.canvas.itemconfig(render_information.context.img_token,image=image.photo_image)
 
 
     def paint_box(self, render_information : RenderInformationContainer) -> int:
         return self.canvas.create_polygon(
-            render_information.x + render_information.border_top_left_radius, render_information.y,
-            render_information.x + render_information.border_top_left_radius, render_information.y,
-            render_information.x + render_information.width - render_information.border_top_right_radius, render_information.y,
-            render_information.x + render_information.width - render_information.border_top_right_radius, render_information.y,
-            render_information.x + render_information.width, render_information.y,
-            render_information.x + render_information.width, render_information.y + render_information.border_top_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.border_top_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height - render_information.border_bottom_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height - render_information.border_bottom_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height,
-            render_information.x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.height,
-            render_information.x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.height,
-            render_information.x + render_information.border_bottom_left_radius, render_information.y + render_information.height,
-            render_information.x + render_information.border_bottom_left_radius, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height - render_information.border_bottom_left_radius,
-            render_information.x, render_information.y + render_information.height - render_information.border_bottom_left_radius,
-            render_information.x, render_information.y + render_information.border_top_left_radius,
-            render_information.x, render_information.y + render_information.border_top_left_radius,
-            render_information.x, render_information.y,
+            render_information.x + render_information.offset_x + render_information.border_top_left_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.border_top_left_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width - render_information.border_top_right_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width - render_information.border_top_right_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.border_top_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.border_top_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.border_bottom_left_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.border_bottom_left_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y,
             smooth = True,
             width = render_information.border_stroke, fill = render_information.background_color,
             outline = render_information.border_color
@@ -134,18 +134,18 @@ class Composite:
 
     def paint_bounds(self, render_information : RenderInformationContainer) -> int:
         return self.canvas.create_polygon(
-            render_information.x + render_information.border_top_left_radius, render_information.y,
-            render_information.x + render_information.width - render_information.border_top_right_radius, render_information.y,
-            render_information.x + render_information.width, render_information.y,
-            render_information.x + render_information.width, render_information.y + render_information.border_top_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height - render_information.border_bottom_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height,
-            render_information.x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.height,
-            render_information.x + render_information.border_bottom_left_radius, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height - render_information.border_bottom_left_radius,
-            render_information.x, render_information.y + render_information.border_top_left_radius,
-            render_information.x, render_information.y,
+            render_information.x + render_information.offset_x + render_information.border_top_left_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width - render_information.border_top_right_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.border_top_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.border_bottom_left_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y,
             smooth = True,
             # LIMIT: Dig into how to get the active state (activefill is like a thing)
             width = 0, fill = ''
@@ -153,26 +153,26 @@ class Composite:
 
     def update_box(self, render_information : RenderInformationContainer):
         self.canvas.coords(render_information.context.box_token,
-            render_information.x + render_information.border_top_left_radius, render_information.y,
-            render_information.x + render_information.border_top_left_radius, render_information.y,
-            render_information.x + render_information.width - render_information.border_top_right_radius, render_information.y,
-            render_information.x + render_information.width - render_information.border_top_right_radius, render_information.y,
-            render_information.x + render_information.width, render_information.y,
-            render_information.x + render_information.width, render_information.y + render_information.border_top_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.border_top_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height - render_information.border_bottom_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height - render_information.border_bottom_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height,
-            render_information.x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.height,
-            render_information.x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.height,
-            render_information.x + render_information.border_bottom_left_radius, render_information.y + render_information.height,
-            render_information.x + render_information.border_bottom_left_radius, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height - render_information.border_bottom_left_radius,
-            render_information.x, render_information.y + render_information.height - render_information.border_bottom_left_radius,
-            render_information.x, render_information.y + render_information.border_top_left_radius,
-            render_information.x, render_information.y + render_information.border_top_left_radius,
-            render_information.x, render_information.y            
+            render_information.x + render_information.offset_x + render_information.border_top_left_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.border_top_left_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width - render_information.border_top_right_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width - render_information.border_top_right_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.border_top_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.border_top_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.border_bottom_left_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.border_bottom_left_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y            
         )
 
         self.canvas.itemconfig(
@@ -183,26 +183,26 @@ class Composite:
 
     def update_bounds(self, render_information : RenderInformationContainer):
         self.canvas.coords( render_information.context.bnd_token,
-            render_information.x + render_information.border_top_left_radius, render_information.y,
-            render_information.x + render_information.border_top_left_radius, render_information.y,
-            render_information.x + render_information.width - render_information.border_top_right_radius, render_information.y,
-            render_information.x + render_information.width - render_information.border_top_right_radius, render_information.y,
-            render_information.x + render_information.width, render_information.y,
-            render_information.x + render_information.width, render_information.y + render_information.border_top_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.border_top_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height - render_information.border_bottom_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height - render_information.border_bottom_right_radius,
-            render_information.x + render_information.width, render_information.y + render_information.height,
-            render_information.x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.height,
-            render_information.x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.height,
-            render_information.x + render_information.border_bottom_left_radius, render_information.y + render_information.height,
-            render_information.x + render_information.border_bottom_left_radius, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height,
-            render_information.x, render_information.y + render_information.height - render_information.border_bottom_left_radius,
-            render_information.x, render_information.y + render_information.height - render_information.border_bottom_left_radius,
-            render_information.x, render_information.y + render_information.border_top_left_radius,
-            render_information.x, render_information.y + render_information.border_top_left_radius,
-            render_information.x, render_information.y
+            render_information.x + render_information.offset_x + render_information.border_top_left_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.border_top_left_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width - render_information.border_top_right_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width - render_information.border_top_right_radius, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.border_top_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.border_top_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_right_radius,
+            render_information.x + render_information.offset_x + render_information.width, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.width- render_information.border_bottom_right_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.border_bottom_left_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x + render_information.border_bottom_left_radius, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.height - render_information.border_bottom_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
+            render_information.x + render_information.offset_x, render_information.y + render_information.offset_y
         )
 
     def delete_element(self, context : Context):

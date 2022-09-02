@@ -91,10 +91,10 @@ class RenderNode(Object):
         self._units[css.Unit.rem] = self.master._units.get(css.Unit.rem, 0)
         self._units[css.Unit.viewport_height] = self.master._units.get(css.Unit.viewport_height, 0)
         self._units[css.Unit.viewport_width] = self.master._units.get(css.Unit.viewport_width, 0)
-        self._units[css.Unit.self_height] = self.layout_information.height
-        self._units[css.Unit.self_width] = self.layout_information.width
-        self._units[css.Unit.master_height] = self.master.layout_information.height
-        self._units[css.Unit.master_width] = self.master.layout_information.width
+        self._units[css.Unit.self_height] = (self.layout_information.height / 100) if self.layout_information.height is not None else 0
+        self._units[css.Unit.self_width] = (self.layout_information.width / 100) if self.layout_information.width is not None else 0
+        self._units[css.Unit.master_height] = (self.master.layout_information.height / 100) if self.master.layout_information.height is not None else 0
+        self._units[css.Unit.master_width] = (self.master.layout_information.width / 100) if self.master.layout_information.width is not None else 0
         
     def get_value(self, value : css.DimensionalValue, default = 0):
         '''Gets the value of a css property'''

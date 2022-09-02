@@ -76,16 +76,14 @@ def _get_unit(unit_name, property_name):
     elif unit_name == 'vw':return css.Unit.viewport_width
     elif unit_name == 'null':return css.Unit.null
     elif unit_name == '%':
-        if property_name in {'height', 'max_height'}:
+        if property_name in {'height', 'max_height', 'min_height', 'top', 'bottom'}:
             return css.Unit.master_height
-        elif property_name in {'width', 'max_width'}:
-            return css.Unit.master_width
-        elif property_name in {}:
+        elif property_name in {'transform_origin_y'}:
             return css.Unit.self_height
-        elif property_name in {}:
-            return css.Unitself_width
+        elif property_name in {'transform_origin_x', 'transform_origin'}:
+            return css.Unit.self_width
         else:
-            console.warn(f'Unhandled % requested on {property_name}, taking master width by default')
+            return css.Unit.master_width
     else:
         console.warn(f"Unknown unit `{unit_name}` on `{property_name}`")
         return css.Unit.px

@@ -41,9 +41,11 @@ class layouter:
 
     @staticmethod
     def set_render_info_position(node):
-        node.render_information.x = (node.master.render_information.x if not node.master.needs_composite else 0) + node.layout_information.offset_x + node.master.layout_information.border_width + (node.master.layout_information.padding_left if node.master.dom_node is node.dom_node.parent else 0) + node.layout_information.x
-        node.render_information.y = (node.master.render_information.y if not node.master.needs_composite else 0) + node.layout_information.offset_y + node.master.layout_information.border_width + (node.master.layout_information.padding_top if node.master.dom_node is node.dom_node.parent else 0) + node.layout_information.y
-    
+        node.render_information.x = (node.master.render_information.x if not node.master.needs_composite else 0) + node.master.layout_information.border_width + (node.master.layout_information.padding_left if node.master.dom_node is node.dom_node.parent else 0) + node.layout_information.x
+        node.render_information.y = (node.master.render_information.y if not node.master.needs_composite else 0) + node.master.layout_information.border_width + (node.master.layout_information.padding_top if node.master.dom_node is node.dom_node.parent else 0) + node.layout_information.y
+        node.render_information.offset_x = node.layout_information.offset_x
+        node.render_information.offset_x = node.layout_information.offset_x
+
     @staticmethod
     def layout_node(
         node : RenderNode,
@@ -70,13 +72,7 @@ class layouter:
         next_on_new_line = False
         #region get sizes based on display
         if node is not skip_node:node.layout_information.reset()
-
-        #region offset positions based on position
-        if node.dom_node.styles.position != css.Position.static: # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
-            layouter.set_offset(node)
-        #endregion
-        
-
+    
         if node.dom_node.styles.display == css.Display.none: # If the element doesnt have to be displayed, just return since it doesnt have to be layouted
             node.dom_node._visible = False
             return (0, 0), (0, 0), (0, 0), False, False
@@ -93,6 +89,7 @@ class layouter:
             node.layout_information.x = node.layout_information.margin_left
             node.layout_information.y = next_vertical_position + max(node.layout_information.margin_top - next_line_provided_margin_top, 0)
             
+            layouter.set_offset_1(node)
             layouter.set_render_info_position(node)
             content_size = layouter.layout_children(node, node.layout_information.content_width, skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height) # Layout the children
             if node.layout_information.height is None: # Implicitly set the height if needed
@@ -102,6 +99,11 @@ class layouter:
                 
             node.layout_information.content_size_width = content_size[0]
             node.layout_information.content_size_height = content_size[1]
+
+            #region offset positions based on position
+            layouter.set_offset_2(node)
+            layouter.set_render_info_position(node)
+            #endregion
 
             is_on_new_line = True
             next_on_new_line = True
@@ -122,11 +124,14 @@ class layouter:
             node.layout_information.content_size_height = content_size[1]
             node.layout_information.content_size_width = content_size[0]
 
+            
+
         elif node.dom_node.styles.display == css.Display.inline_block: # Inline block elements are like inline elements but will implicitly fill as much width as possible and are allowed to have a say on their size
             if node is not skip_node:layouter.set_layout_information(node)
             
             node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
             node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
+            layouter.set_offset_1(node)
             layouter.set_render_info_position(node)
             if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
                 node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right - suggested_horizontal_position if node.master.layout_information.content_width is not None and node.master.layout_information.content_width > 0 else 0
@@ -145,7 +150,10 @@ class layouter:
                 node.layout_information.content_width = content_size[0]
                 node.layout_information.width = node.layout_information.content_width + node.layout_information.padding_left + node.layout_information.padding_right + 2 * node.layout_information.border_width
             if node is not skip_node:layouter.validate_size(node) # Validate the size
-                
+            #region offset positions based on position
+            layouter.set_offset_2(node)
+            layouter.set_render_info_position(node)
+            #endregion
         
         elif node.dom_node.styles.display == css.Display.text:
             node.render_information.foreground_color = node.dom_node.styles.color
@@ -211,14 +219,25 @@ class layouter:
                 node.layout_information.content_height  = node.layout_information.height - (2 * node.layout_information.border_width) - node.layout_information.padding_top - node.layout_information.padding_bottom if node.layout_information.height else 0
 
     @staticmethod
-    def set_offset(node : RenderNode):
+    def set_offset_1(node : RenderNode):
         '''Offsets the position of the element according to its left top right bottom values'''
+        node.set_units()
+
+        left = None
+        right = 0
+        top = None
+        bottom = 0
+        if node.dom_node.styles.position != css.Position.static: # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
+            left, right = node.get_value(node.dom_node.styles.left, None), node.get_value(node.dom_node.styles.right)
+            top, bottom = node.get_value(node.dom_node.styles.top, None), node.get_value(node.dom_node.styles.bottom)
+        node.layout_information.x += left if left is not None else -right
+        node.layout_information.y += top if top is not None else -bottom
         
-        left, right = node.get_value(node.dom_node.styles.left, None), node.get_value(node.dom_node.styles.right)
-        top, bottom = node.get_value(node.dom_node.styles.top, None), node.get_value(node.dom_node.styles.bottom)
-        
-        node.layout_information.offset_x = left if left is not None else -right
-        node.layout_information.offset_y = top if top is not None else -bottom
+    @staticmethod
+    def set_offset_2(node : RenderNode):
+        node.layout_information.offset_x = node.get_value(node.dom_node.styles.transform_origin_x)
+        node.layout_information.offset_y = node.get_value(node.dom_node.styles.transform_origin_y)
+
 
     @staticmethod
     def layout_children(

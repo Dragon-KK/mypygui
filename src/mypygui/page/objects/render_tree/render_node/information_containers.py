@@ -79,6 +79,9 @@ class RenderInformationContainer(Object):
         self.y = 0
         '''the absolute y (compared to the nearest composite)'''
 
+        self.offset_x = 0
+        self.offset_y = 0
+
         self.width  = 0 
         '''The width of the padding box'''
         self.height = 0
