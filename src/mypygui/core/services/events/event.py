@@ -21,7 +21,12 @@ class Event:
 
     def __init__(self, type : str, target : DOMNode, propogate : bool, opposite_direction=False, **info):
         self.type = type
+        '''The type of the event'''
         self.propogate = propogate
+        '''Set to false to stop the event from propogating'''
         self.opposite_direction = opposite_direction
+        '''Set to True to propogate the event from parent to child (instead of child to parent)'''
         self.target = target
+        '''The target of the event (the one who emitted it usually)'''
         self.info = Object(**info)
+        '''An object containing information about the event'''

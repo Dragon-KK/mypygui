@@ -14,6 +14,14 @@ class EventHandler(ServiceProvider):
         self.next_request_key = 0
 
     def request_dispatch(self, event_emitter : EventEmitter, event : Event):
+        '''
+        Requests for an event to be dispatched
+        Parameters:
+            event_emitter : EventEmitter
+                The event emitter that requested dispatch
+            event : Event
+                The event
+        '''
         self.request_service(event_emitter, event)
 
     def _provide_service(self, request_key, args : tuple, promise : Promise):
