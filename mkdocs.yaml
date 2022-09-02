@@ -12,6 +12,7 @@ nav:
   - Utilities :
       - Asynchronous : 'utilities/asynchronous.md'
       - File System : 'utilities/fs.md'
+      - Logging : 'utilities/logging.md'
   - Services :
       - Resource Handling : 'services/resource_handling.md'
       - Events : 'services/events.md'
