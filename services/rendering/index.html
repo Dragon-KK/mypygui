@@ -62,6 +62,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../utilities/fs/">File System</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../utilities/logging/">Logging</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Services</span></p>
               <ul class="current">
@@ -70,6 +72,22 @@
                   <li class="toctree-l1"><a class="reference internal" href="../events/">Events</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Rendering</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#composite">Composite</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#compositecanvas">Composite.canvas</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#compositecomposited_element">Composite.composited_element</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#compositescroll_y">Composite.scroll_y</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#compositescroll_x">Composite.scroll_x</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#todo">TODO</a>
+    </li>
+    </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../worker/">Worker</a>
                   </li>
@@ -102,7 +120,110 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                
+                <h1 id="rendering">Rendering</h1>
+<h2 id="composite">Composite</h2>
+<div class="location">mypygui.core.services.Composites.Composite.Composite</div>
+
+<h3 id="compositecanvas">Composite.canvas</h3>
+<div class="property">
+    <div class="property-name">Composite.<span class="last_word">canvas</span><div class="property-type">tkinter.Canvas</div></div>
+    <div class="property-description">
+    The canvas associated with the composite
+    </div>
+</div>
+
+<h3 id="compositecomposited_element">Composite.composited_element</h3>
+<div class="property">
+    <div class="property-name">Composite.<span class="last_word">composited_element</span><div class="property-type">RenderNode __link__</div></div>
+    <div class="property-description">
+    The render node for which the composite is made
+    </div>
+</div>
+
+<h3 id="compositescroll_y">Composite.scroll_y</h3>
+<div class="property">
+    <div class="property-name">Composite.<span class="last_word">scroll_y</span><div class="property-type">(amount) → None</div></div>
+    <div class="property-description">
+    Scrolls in the y direction<br>
+    Parameters
+    <ul>
+        <li> <code>amount : int</code><br>
+        The amount by which the composite should be scrolled
+    </ul>
+    </div>
+</div>
+
+<h3 id="compositescroll_x">Composite.scroll_x</h3>
+<div class="property">
+    <div class="property-name">Composite.<span class="last_word">scroll_x</span><div class="property-type">(amount) → None</div></div>
+    <div class="property-description">
+    Scrolls in the x direction<br>
+    Parameters
+    <ul>
+        <li> <code>amount : int</code><br>
+        The amount by which the composite should be scrolled
+    </ul>
+    </div>
+</div>
+
+<hr>
+
+<h2 id="todo">TODO</h2>
+<hr>
+
+<style>
+    .last_word{
+        color : orangered !important;
+    }
+    .property-description{
+        font-size:1.2em;
+    }
+    h2{
+        font-size: 2em;
+        margin: 0 !important;
+        color : white;
+        background-color : #444;
+        padding: 0.3em;
+        margin-top: 1em;
+        border-left: solid 10px grey;
+    }
+    h3{
+        visibility:hidden;
+        height:0;
+        margin:0;
+    }
+    .location{
+        color : white;
+        background-color : #444;
+        padding: 0.5em 2em;
+        font-size: 1em;
+        font-family: monospace;
+        border-left: solid 10px grey;
+    }
+    .property-name{
+        font-family: monospace !important;
+        color: darkcyan;
+        margin: 1em 0 0 0;
+        font-weight : bold;
+        font-size: 1.5em;
+    }
+    .property-type::before{
+        content: ' : ';
+    }
+    .property-type{
+        display: inline;
+        font-size:0.75em;
+        color:yellowgreen;
+    }
+    li{
+        padding-left:1rem;
+    }
+    .property{
+        margin-left:1em;
+        padding-left:0.5em;
+        border-left:10px solid black;
+    }
+</style>
               
             </div>
           </div><footer>

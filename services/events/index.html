@@ -62,6 +62,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../utilities/fs/">File System</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../utilities/logging/">Logging</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Services</span></p>
               <ul class="current">
@@ -69,15 +71,49 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Events</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#event">Event</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#eventtypes">Event.Types</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventtype">Event.type</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventpropogate">Event.propogate</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventopposite_direction">Event.opposite_direction</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventtarget">Event.target</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventinfo">Event.info</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#eventemitter">EventEmitter</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemittertarget">EventEmitter.target</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemitterevent_handler">EventEmitter.event_handler</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemitternever_propogate">EventEmitter.never_propogate</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemitterdisabled">EventEmitter.disabled</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemittersubscribers">EventEmitter.subscribers</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemittersubscribe">EventEmitter.subscribe</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemitterdispatch">EventEmitter.dispatch</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemitteremit">EventEmitter.emit</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemitterpropogate">EventEmitter.propogate</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#eventemitter_dispatch">EventEmitter._dispatch</a>
+    </li>
+        </ul>
+    </li>
     <li class="toctree-l2"><a class="reference internal" href="#eventhandlerserviceprovider">EventHandler(ServiceProvider)</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#eventhandlerreset">EventHandler.reset</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#eventhandlerrelease_all_resources">EventHandler.release_all_resources</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#eventhandlerrelease_resource">EventHandler.release_resource</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#eventhandlerrequest_resource">EventHandler.request_resource</a>
+    <li class="toctree-l3"><a class="reference internal" href="#eventhandlerrequest_dispatch">EventHandler.request_dispatch</a>
     </li>
         </ul>
     </li>
@@ -117,55 +153,200 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="events">Events</h1>
-<h2 id="eventhandlerserviceprovider">EventHandler(<a href="../service_provider">ServiceProvider</a>)</h2>
-<div class="location">mypygui.core.services.resource_handling.resource_handler.EventHandler</div>
+<h2 id="event">Event</h2>
+<div class="location">mypygui.core.services.events.event.Event</div>
 
-<h3 id="eventhandlerreset">EventHandler.reset</h3>
+<h3 id="eventtypes">Event.Types</h3>
 <div class="property">
-    <div class="property-name">EventHandler.<span class="last_word">reset</span><div class="property-type">( ) → None</div></div>
+    <div class="property-name">Event.<span class="last_word">Types</span><div class="property-type">Enum (static)</div></div>
     <div class="property-description">
-    Clears pending requests and resets any counters etc
+    Currently supported dom events are
+    <ul>
+        <li>click
+        <li>mouse_up
+        <li>enter
+        <li>key_press
+        <li>key_release
+        <li>leave
+        <li>mouse_over
+        <li>resize
+        <li>hover_start
+        <li>hover_end
+        <li>scroll
+    </ul>
     </div>
 </div>
 
-<h3 id="eventhandlerrelease_all_resources">EventHandler.release_all_resources</h3>
+<h3 id="eventtype">Event.type</h3>
 <div class="property">
-    <div class="property-name">EventHandler.<span class="last_word">release_all_resources</span><div class="property-type">( ) → None</div></div>
+    <div class="property-name">Event.<span class="last_word">type</span><div class="property-type"><a href="#eventtype">Event.Type</a></div></div>
     <div class="property-description">
-        Releases all resources (including persisted resources)
+    The type of the event
     </div>
 </div>
 
-<h3 id="eventhandlerrelease_resource">EventHandler.release_resource</h3>
+<h3 id="eventpropogate">Event.propogate</h3>
 <div class="property">
-    <div class="property-name">EventHandler.<span class="last_word">release_resource</span><div class="property-type">(request_key) → None</div></div>
+    <div class="property-name">Event.<span class="last_word">propogate</span><div class="property-type">bool</div></div>
     <div class="property-description">
-        Releases a persisted resource given the resource key<br>
-        NOTE: It is not recommended to use this<br>
+    Set to false to stop the event from propogating
+    </div>
+</div>
+
+<h3 id="eventopposite_direction">Event.opposite_direction</h3>
+<div class="property">
+    <div class="property-name">Event.<span class="last_word">opposite_direction</span><div class="property-type">bool</div></div>
+    <div class="property-description">
+    Set to True to propogate the event from parent to child (instead of child to parent)
+    </div>
+</div>
+
+<h3 id="eventtarget">Event.target</h3>
+<div class="property">
+    <div class="property-name">Event.<span class="last_word">target</span><div class="property-type">DOMNode __link__</div></div>
+    <div class="property-description">
+    The target of the event (the one who emitted it usually)
+    </div>
+</div>
+
+<h3 id="eventinfo">Event.info</h3>
+<div class="property">
+    <div class="property-name">Event.<span class="last_word">info</span><div class="property-type">Object __link__</div></div>
+    <div class="property-description">
+    An object containing information about the event
+    </div>
+</div>
+
+<hr>
+
+<h2 id="eventemitter">EventEmitter</h2>
+<div class="location">mypygui.core.services.events.event_emitter.EventEmitter</div>
+
+<h3 id="eventemittertarget">EventEmitter.target</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">target</span><div class="property-type">DOMNode __link__</div></div>
+    <div class="property-description">
+    The target of the event emitter (the one who emits the events)
+    </div>
+</div>
+
+<h3 id="eventemitterevent_handler">EventEmitter.event_handler</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">event_handler</span><div class="property-type"><a href="#eventhandlerserviceprovider">EventHandler</a></div></div>
+    <div class="property-description">
+    Reference to the event_handler (in order to emit events)
+    </div>
+</div>
+
+<h3 id="eventemitternever_propogate">EventEmitter.never_propogate</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">never_propogate</span><div class="property-type">bool</div></div>
+    <div class="property-description">
+    Set to True in order to never propogate events that are in the normal direction
+    </div>
+</div>
+
+<h3 id="eventemitterdisabled">EventEmitter.disabled</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">disabled</span><div class="property-type">bool</div></div>
+    <div class="property-description">
+    Set to True in order to stop emitting events
+    </div>
+</div>
+
+<h3 id="eventemittersubscribers">EventEmitter.subscribers</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">subscribers</span><div class="property-type">dict[<a href="#eventtypes">Event.Types</a>, Tuple[fn, bool]]</div></div>
+    <div class="property-description">
+    Stores the callback (fn) and whether events emitted by children notified too (bool)
+    </div>
+</div>
+
+<h3 id="eventemittersubscribe">EventEmitter.subscribe</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">subscribe</span><div class="property-type">(event_type, callback, notify_child_events?) → None</div></div>
+    <div class="property-description">
+        Subscribe to the events of a particular type<br>
         Parameters:
         <ul>
-            <li> <code>resource_key</code> (use <code>EventHandler._get_request_key</code> to get this) <br>
+            <li> <code>event_type : <a href="#eventtypes">Event.Types</a></code> <br>
+            The type of the event to subcribe to
+            <li> <code>callback : (event) → None</code><br>
+            The function that should be called when the event is emitted
+            <li> <code>notify_child_events : bool</code><br>
+            Set to True in order to get notified by events emitted by children also
         </ul>
     </div>
 </div>
 
-<h3 id="eventhandlerrequest_resource">EventHandler.request_resource</h3>
+<h3 id="eventemitterdispatch">EventEmitter.dispatch</h3>
 <div class="property">
-    <div class="property-name">EventHandler.<span class="last_word">request_resource</span><div class="property-type">(uri?, file_type?, resource_key?, data_resolver?, persist?) → <a href="../../utilities/asynchronous#promise">Promise</a></div></div>
+    <div class="property-name">EventEmitter.<span class="last_word">dispatch</span><div class="property-type">(event) → None</div></div>
     <div class="property-description">
-        Requests a resource<br>
+        Dispatches an event (by requesting it to the event_handler using <code><a href="#eventhandlerrequest_dispatch">EventEmitter.request_dispatch</a></code>)<br>
         Parameters:
         <ul>
-            <li> <code>uri : <a href="../../utilities/fs#URI">fs.URI</a></code><br>
-                The uri that needs to be loaded
-            <li> <code>file_type : <a href="../../utilities/fs#filetype">fs.FileType</a></code><br>
-                The file type of the resource
-            <li> <code>resource_key</a></code><br>
-                A backup resource_key just in case a resource key could not be made from the uri (will never happen)
-            <li> <code>data_resolver : (data) → any</a></code><br>
-                A function that will modify the data to a more usable form
-            <li> <code>persist : bool</code><br>
-                Set persist to true to allow a resource to persist between page loads
+            <li> <code>event : <a href="#event">Event</a></code> <br>
+            The event
+        </ul>
+    </div>
+</div>
+
+<h3 id="eventemitteremit">EventEmitter.emit</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">emit</span><div class="property-type">(event) → None</div></div>
+    <div class="property-description">
+        Emits the event to all that subscribed to it<br>
+        Parameters:
+        <ul>
+            <li> <code>event : <a href="#event">Event</a></code> <br>
+            The event
+        </ul>
+    </div>
+</div>
+
+<h3 id="eventemitterpropogate">EventEmitter.propogate</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">propogate</span><div class="property-type">(event) → None</div></div>
+    <div class="property-description">
+        Propogates the event to parent event emitter (or to children if opposite direction is set to true on the event)<br>
+        Parameters:
+        <ul>
+            <li> <code>event : <a href="#event">Event</a></code> <br>
+            The event
+        </ul>
+    </div>
+</div>
+
+<h3 id="eventemitter_dispatch">EventEmitter._dispatch</h3>
+<div class="property">
+    <div class="property-name">EventEmitter.<span class="last_word">_dispatch</span><div class="property-type">(event) → None</div></div>
+    <div class="property-description">
+        Dispatches an event (by calling <code><a href="#eventemitteremit">EventEmitter.emit</a></code> and <code><a href="#eventemitterpropogate">EventEmitter.propogate</a></code>)<br>
+        Parameters:
+        <ul>
+            <li> <code>event : <a href="#event">Event</a></code> <br>
+            The event
+        </ul>
+    </div>
+</div>
+
+<hr>
+
+<h2 id="eventhandlerserviceprovider">EventHandler(<a href="../service_provider">ServiceProvider</a>)</h2>
+<div class="location">mypygui.core.services.events.event_handler.EventHandler</div>
+
+<h3 id="eventhandlerrequest_dispatch">EventHandler.request_dispatch</h3>
+<div class="property">
+    <div class="property-name">EventHandler.<span class="last_word">request_dispatch</span><div class="property-type">(event_emitter, event) → None</div></div>
+    <div class="property-description">
+    Requests for an event to be dispatched<br>
+    Parameters:
+        <ul>
+            <li> <code>event_emitter : <a href="#eventemitter">EventEmitter</a></code> <br>
+            The event emitter that requested dispatch
+            <li> <code>event : <a href="#event">Event</a></code> <br>
+            The event
         </ul>
     </div>
 </div>

@@ -62,6 +62,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../utilities/fs/">File System</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../utilities/logging/">Logging</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Services</span></p>
               <ul class="current">
@@ -72,6 +74,14 @@
                   <li class="toctree-l1"><a class="reference internal" href="../rendering/">Rendering</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="./">Worker</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#workersserviceprovider">Workers(ServiceProvider)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#workerrequest_service">Worker.request_service</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../layout_managing/">Layout Managing</a>
                   </li>
@@ -102,7 +112,82 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                
+                <h1 id="worker">Worker</h1>
+<h2 id="workersserviceprovider">Workers(<a href="../service_provider">ServiceProvider</a>)</h2>
+<div class="location">mypygui.core.services.worker.worker.Worker</div>
+
+<h3 id="workerrequest_service">Worker.request_service</h3>
+<div class="property">
+    <div class="property-name">Worker.<span class="last_word">request_service</span><div class="property-type">(callback, args?, kwargs?) → None</div></div>
+    <div class="property-description">
+    Requests for some work to be done<br>
+    Parameters:
+        <ul>
+            <li> <code>callback : (args?, kwargs?) → None</code><br>
+            The function that will needs to be run
+            <li> <code>args : tuple</code> <br>
+            A tuple of arguments passed to the callback
+            <li> <code>kwargs : dict</code> <br>
+            A dict of arguments passed to the callback
+        </ul>
+    </div>
+</div>
+
+<hr>
+
+<style>
+    .last_word{
+        color : orangered !important;
+    }
+    .property-description{
+        font-size:1.2em;
+    }
+    h2{
+        font-size: 2em;
+        margin: 0 !important;
+        color : white;
+        background-color : #444;
+        padding: 0.3em;
+        margin-top: 1em;
+        border-left: solid 10px grey;
+    }
+    h3{
+        visibility:hidden;
+        height:0;
+        margin:0;
+    }
+    .location{
+        color : white;
+        background-color : #444;
+        padding: 0.5em 2em;
+        font-size: 1em;
+        font-family: monospace;
+        border-left: solid 10px grey;
+    }
+    .property-name{
+        font-family: monospace !important;
+        color: darkcyan;
+        margin: 1em 0 0 0;
+        font-weight : bold;
+        font-size: 1.5em;
+    }
+    .property-type::before{
+        content: ' : ';
+    }
+    .property-type{
+        display: inline;
+        font-size:0.75em;
+        color:yellowgreen;
+    }
+    li{
+        padding-left:1rem;
+    }
+    .property{
+        margin-left:1em;
+        padding-left:0.5em;
+        border-left:10px solid black;
+    }
+</style>
               
             </div>
           </div><footer>
