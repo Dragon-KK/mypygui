@@ -31,9 +31,9 @@ class EventEmitter:
             notify_child_events : bool
                 Set to True in order to get notified by events emitted by children also
         '''
-        if self.subscribers.get(event) is None:
-            self.subscribers[event] = []
-        self.subscribers[event].append((callback, notify_child_events))
+        if self.subscribers.get(event_type) is None:
+            self.subscribers[event_type] = []
+        self.subscribers[event_type].append((callback, notify_child_events))
 
     def dispatch(self, event : Event):
         '''
