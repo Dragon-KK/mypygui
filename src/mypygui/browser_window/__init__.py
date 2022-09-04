@@ -56,7 +56,6 @@ class BrowserWindow:
             self.resource_handler.run()     
             self.layout_handler.run() # Start the layout handler
             self.event_handler.run()
-            # LIMIT maybe if the renderer tkes to long to setup, to ready call is made before, maybe keep some kind of flag to stop this?
             console.info('Initialized browser window')
             self.on_ready.resolve(True)
         except Exception as e:

@@ -86,7 +86,7 @@ class RenderNode(Object):
 
     def set_units(self):
         '''Sets the multipliers of css units'''
-        # LIMIT: em and self size not implemented (em is same as rem here)
+        # LIMIT: em and rem not implemented (em is same as rem here)
         self._units[css.Unit.em] = self.master._units.get(css.Unit.em, 0)
         self._units[css.Unit.rem] = self.master._units.get(css.Unit.rem, 0)
         self._units[css.Unit.viewport_height] = self.master._units.get(css.Unit.viewport_height, 0)
