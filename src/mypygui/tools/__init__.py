@@ -1,4 +1,4 @@
-def validate_text_input(event, span, validation_function = lambda e:'hover' in e.state):
+def validate_text_input(event, span, clipboard, validation_function = lambda e:'hover' in e.state):
 
     if not validation_function(span):return
     if event.info._e.char == '':
@@ -9,7 +9,7 @@ def validate_text_input(event, span, validation_function = lambda e:'hover' in e
         span.content = span.content[:-1]
     elif o == 22:
         txt = clipboard.get()
-        span.content += event.info._e.char
+        span.content += txt
     elif o == 3:
         clipboard.set(span.content)
     else:

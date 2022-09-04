@@ -71,10 +71,10 @@ def handle(elem):
     
 def handle2(elem):
     elem.event_emitter.subscribe(Event.Types.click, lambda e:elem.remove())
-    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:validate_text_input(e, elem.children[0], validation_function=lambda e:'hover' in e.parent.state))
+    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:validate_text_input(e, elem.children[0], clipboard, validation_function=lambda e:'hover' in e.parent.state))
 
 def handle3(elem):
-    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:validate_text_input(e, elem))
+    elem.event_emitter.subscribe(Event.Types.key_press, lambda e:validate_text_input(e, elem, clipboard))
 
 for elem in elems:
     handle(elem)
@@ -86,5 +86,4 @@ if tmp_store.abc is None:
     tmp_store.abc = 1
 else:
     tmp_store.abc += 1
-
 print(tmp_store)
