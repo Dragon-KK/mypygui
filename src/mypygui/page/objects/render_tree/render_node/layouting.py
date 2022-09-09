@@ -67,137 +67,142 @@ class layouter:
         bool, # Set to true if the element was positioned on a new line
         bool, # Set to true if the next element is to be positioned on a new line
     ):
+        # LIMIT: This is kind of jank
+        try:
+            is_on_new_line = False
+            next_on_new_line = False
+            #region get sizes based on display
+            if node is not skip_node:node.layout_information.reset()
+        
+            if node.dom_node is None or node.dom_node.styles.display == css.Display.none: # If the element doesnt have to be displayed, just return since it doesnt have to be layouted
+                node.dom_node._visible = False
+                return (0, 0), (0, 0), (0, 0), False, False
 
-        is_on_new_line = False
-        next_on_new_line = False
-        #region get sizes based on display
-        if node is not skip_node:node.layout_information.reset()
-    
-        if node.dom_node.styles.display == css.Display.none: # If the element doesnt have to be displayed, just return since it doesnt have to be layouted
-            node.dom_node._visible = False
-            return (0, 0), (0, 0), (0, 0), False, False
-
-        elif node.dom_node.styles.display == css.Display.block: # Block elements will go on a new line, force siblings to go on a new line and will implicitly fill as much width as possible
-            
-            if node is not skip_node:layouter.set_layout_information(node) # Set layotu information
-            if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
-                node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right
-                node.layout_information.content_width  = node.layout_information.width - (2 * node.layout_information.border_width) - node.layout_information.padding_left - node.layout_information.padding_right if node.layout_information.width else 0        
+            elif node.dom_node.styles.display == css.Display.block: # Block elements will go on a new line, force siblings to go on a new line and will implicitly fill as much width as possible
                 
+                if node is not skip_node:layouter.set_layout_information(node) # Set layotu information
+                if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
+                    node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right
+                    node.layout_information.content_width  = node.layout_information.width - (2 * node.layout_information.border_width) - node.layout_information.padding_left - node.layout_information.padding_right if node.layout_information.width else 0        
+                    
 
-            if node is not skip_node:layouter.validate_size(node) # Validate the size
-            node.layout_information.x = node.layout_information.margin_left
-            node.layout_information.y = next_vertical_position + max(node.layout_information.margin_top - next_line_provided_margin_top, 0)
-            
-            layouter.set_offset_1(node)
-            layouter.set_render_info_position(node)
-            content_size = layouter.layout_children(node, node.layout_information.content_width, skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height) # Layout the children
-            if node.layout_information.height is None: # Implicitly set the height if needed
-                node.layout_information.content_height = content_size[1]
-                node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
                 if node is not skip_node:layouter.validate_size(node) # Validate the size
+                node.layout_information.x = node.layout_information.margin_left
+                node.layout_information.y = next_vertical_position + max(node.layout_information.margin_top - next_line_provided_margin_top, 0)
                 
-            node.layout_information.content_size_width = content_size[0]
-            node.layout_information.content_size_height = content_size[1]
+                layouter.set_offset_1(node)
+                layouter.set_render_info_position(node)
+                content_size = layouter.layout_children(node, node.layout_information.content_width, skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height) # Layout the children
+                if node.layout_information.height is None: # Implicitly set the height if needed
+                    node.layout_information.content_height = content_size[1]
+                    node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
+                    if node is not skip_node:layouter.validate_size(node) # Validate the size
+                    
+                node.layout_information.content_size_width = content_size[0]
+                node.layout_information.content_size_height = content_size[1]
 
-            #region offset positions based on position
-            layouter.set_offset_2(node)
-            layouter.set_render_info_position(node)
-            #endregion
+                #region offset positions based on position
+                layouter.set_offset_2(node)
+                layouter.set_render_info_position(node)
+                #endregion
 
-            is_on_new_line = True
-            next_on_new_line = True
+                is_on_new_line = True
+                next_on_new_line = True
 
-        elif node.dom_node.styles.display == css.Display.inline: # Inline elements will implicitly set their max width to their master's max width and will finally set their width to their content size
-            if node is not skip_node:layouter.set_layout_information(node)
-            
-            node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
-            node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
-            layouter.set_render_info_position(node)
-            if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
-            content_size = layouter.layout_children(node, node.layout_information.content_width if node.layout_information.content_width is not None else (line_end - node.layout_information.x), skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
-            node.layout_information.content_height = content_size[1]
-            node.layout_information.content_width = content_size[0]
-            node.layout_information.width = node.layout_information.content_width + node.layout_information.padding_left + node.layout_information.padding_right + 2 * node.layout_information.border_width
-            node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
-            if node is not skip_node:layouter.validate_size(node) # Validate the size
-            node.layout_information.content_size_height = content_size[1]
-            node.layout_information.content_size_width = content_size[0]
-
-            
-
-        elif node.dom_node.styles.display == css.Display.inline_block: # Inline block elements are like inline elements but will implicitly fill as much width as possible and are allowed to have a say on their size
-            if node is not skip_node:layouter.set_layout_information(node)
-            
-            node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
-            node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
-            layouter.set_offset_1(node)
-            layouter.set_render_info_position(node)
-            if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
-                node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right - suggested_horizontal_position if node.master.layout_information.content_width is not None and node.master.layout_information.content_width > 0 else 0
-                node.layout_information.content_width  = node.layout_information.width - (2 * node.layout_information.border_width) - node.layout_information.padding_left - node.layout_information.padding_right if node.layout_information.width else 0        
-            if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
-            content_size = layouter.layout_children(node, node.layout_information.content_width if node.layout_information.content_width is not None else (line_end - suggested_horizontal_position - node.layout_information.margin_left), skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
-            
-            if node.layout_information.height is None: # Implicitly set the height if needed
+            elif node.dom_node.styles.display == css.Display.inline: # Inline elements will implicitly set their max width to their master's max width and will finally set their width to their content size
+                if node is not skip_node:layouter.set_layout_information(node)
+                
+                node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
+                node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
+                layouter.set_render_info_position(node)
+                if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
+                content_size = layouter.layout_children(node, node.layout_information.content_width if node.layout_information.content_width is not None else (line_end - node.layout_information.x), skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
                 node.layout_information.content_height = content_size[1]
-                node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
-                
-            node.layout_information.content_size_height = content_size[1]
-            node.layout_information.content_size_height = content_size[0]
-
-            if node.layout_information.width is None: # Implicitly set the height if needed
                 node.layout_information.content_width = content_size[0]
                 node.layout_information.width = node.layout_information.content_width + node.layout_information.padding_left + node.layout_information.padding_right + 2 * node.layout_information.border_width
-            if node is not skip_node:layouter.validate_size(node) # Validate the size
-            #region offset positions based on position
-            layouter.set_offset_2(node)
-            layouter.set_render_info_position(node)
+                node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
+                if node is not skip_node:layouter.validate_size(node) # Validate the size
+                node.layout_information.content_size_height = content_size[1]
+                node.layout_information.content_size_width = content_size[0]
+
+                
+
+            elif node.dom_node.styles.display == css.Display.inline_block: # Inline block elements are like inline elements but will implicitly fill as much width as possible and are allowed to have a say on their size
+                if node is not skip_node:layouter.set_layout_information(node)
+                
+                node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
+                node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
+                layouter.set_offset_1(node)
+                layouter.set_render_info_position(node)
+                if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
+                    node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right - suggested_horizontal_position if node.master.layout_information.content_width is not None and node.master.layout_information.content_width > 0 else 0
+                    node.layout_information.content_width  = node.layout_information.width - (2 * node.layout_information.border_width) - node.layout_information.padding_left - node.layout_information.padding_right if node.layout_information.width else 0        
+                if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
+                content_size = layouter.layout_children(node, node.layout_information.content_width if node.layout_information.content_width is not None else (line_end - suggested_horizontal_position - node.layout_information.margin_left), skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
+                
+                if node.layout_information.height is None: # Implicitly set the height if needed
+                    node.layout_information.content_height = content_size[1]
+                    node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
+                    
+                node.layout_information.content_size_height = content_size[1]
+                node.layout_information.content_size_height = content_size[0]
+
+                if node.layout_information.width is None: # Implicitly set the height if needed
+                    node.layout_information.content_width = content_size[0]
+                    node.layout_information.width = node.layout_information.content_width + node.layout_information.padding_left + node.layout_information.padding_right + 2 * node.layout_information.border_width
+                if node is not skip_node:layouter.validate_size(node) # Validate the size
+                #region offset positions based on position
+                layouter.set_offset_2(node)
+                layouter.set_render_info_position(node)
+                #endregion
+            
+            elif node.dom_node.styles.display == css.Display.text:
+                node.render_information.foreground_color = node.dom_node.styles.color
+                node.render_information.font = (node.dom_node.styles.font_family, int(node.get_value(node.dom_node.styles.font_size, default=5)), node.dom_node.styles.font_weight)
+                node.font.config(family=node.render_information.font[0], size=node.render_information.font[1], weight=node.render_information.font[2])
+                
+                content_width=0
+                content_height=0
+                node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
+                node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
+                layouter.set_render_info_position(node)
+                if node is not skip_node:
+                    layouter.set_layout_information(node)
+                    xs = node.dom_node.content.splitlines()
+                    if node.dom_node is None:return
+                    if xs:
+                        content_width = max(node.font.measure(i) for i in xs)
+                        content_height = node.font.metrics('linespace') * (node.dom_node.content.count('\r') + 1)
+
+                
+                if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
+                content_size = (content_width, content_height) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
+                node.layout_information.content_height = content_size[1]
+                node.layout_information.content_width = content_size[0]
+                node.layout_information.width = node.layout_information.content_width + node.layout_information.padding_left + node.layout_information.padding_right + 2 * node.layout_information.border_width
+                node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
+                if node is not skip_node:layouter.validate_size(node) # Validate the size
+                node.layout_information.content_size_height = content_size[1]
+                node.layout_information.content_size_width = content_size[0]
+
+            else:
+                raise NotImplementedError('Unhandled display type', node.dom_node.styles.display)
             #endregion
-        
-        elif node.dom_node.styles.display == css.Display.text:
-            node.render_information.foreground_color = node.dom_node.styles.color
-            node.render_information.font = (node.dom_node.styles.font_family, int(node.get_value(node.dom_node.styles.font_size, default=5)), node.dom_node.styles.font_weight)
-            node.font.config(family=node.render_information.font[0], size=node.render_information.font[1], weight=node.render_information.font[2])
-            
-            content_width=0
-            content_height=0
-            node.layout_information.x = suggested_horizontal_position + max(node.layout_information.margin_left - provided_margin_left, 0)
-            node.layout_information.y = suggested_vertical_position + max(node.layout_information.margin_top - provided_margin_top, 0)
-            layouter.set_render_info_position(node)
-            if node is not skip_node:
-                layouter.set_layout_information(node)
-                xs = node.dom_node.content.splitlines()
-                if xs:
-                    content_width = max(node.font.measure(i) for i in xs)
-                    content_height = node.font.metrics('linespace') * (node.dom_node.content.count('\r') + 1)
 
             
-            if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
-            content_size = (content_width, content_height) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
-            node.layout_information.content_height = content_size[1]
-            node.layout_information.content_width = content_size[0]
-            node.layout_information.width = node.layout_information.content_width + node.layout_information.padding_left + node.layout_information.padding_right + 2 * node.layout_information.border_width
-            node.layout_information.height = node.layout_information.content_height + node.layout_information.padding_bottom + node.layout_information.padding_top + 2 * node.layout_information.border_width
-            if node is not skip_node:layouter.validate_size(node) # Validate the size
-            node.layout_information.content_size_height = content_size[1]
-            node.layout_information.content_size_width = content_size[0]
-
-        else:
-            raise NotImplementedError('Unhandled display type', node.dom_node.styles.display)
-        #endregion
-
-        
-        node.dom_node._visible = True
-        layouter.set_render_info_size(node)
-        node.after_layout()
-        return (
-            (node.layout_information.x, node.layout_information.y),
-            (node.layout_information.width, node.layout_information.height),
-            (node.layout_information.margin_right, node.layout_information.margin_bottom),
-            is_on_new_line,
-            next_on_new_line
-        )
+            node.dom_node._visible = True
+            layouter.set_render_info_size(node)
+            node.after_layout()
+            return (
+                (node.layout_information.x, node.layout_information.y),
+                (node.layout_information.width, node.layout_information.height),
+                (node.layout_information.margin_right, node.layout_information.margin_bottom),
+                is_on_new_line,
+                next_on_new_line
+            )
+        except:
+            node.dom_node._visible = False
+            return (0, 0), (0, 0), (0, 0), False, False
 
     @staticmethod
     def validate_size(node : RenderNode, validate_width = True, validate_height = True):

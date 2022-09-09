@@ -66,6 +66,8 @@ class Page:
         Closes the page
         '''
         # PERFORMANCE: There seems to be a memory leak of approx 0.8 mb
+        # https://stackoverflow.com/a/16423365
+        # Perhaps its not a leak?
         self.script_globals['page_closed'].resolve(True)
         self.dom.root.remove(_remove_from_parent = False, _reflow=False)
         self.dom.root = None
