@@ -1,23 +1,23 @@
 site_name: mypygui
 
 theme:
-    name: readthedocs
+  name: readthedocs
 
 nav:
   - Home : 'index.md'
-  - User Guide :
-      - Getting Started : 'user-guide/getting-started.md'
-  - Objects :
-      - Browser Window : 'objects/browser-window.md'
-      - Page : 'objects/page.md'
-  - Page :
-      - scripts : 'page/scripts.md'
-      - css : 'page/css.md'
-      - html : 'page/html.md'
-      - Object Models :
-          - CSSOM : 'page/object-models/cssom.md'
-          - DOM : 'page/object-models/dom.md'
-          - Render Tree : 'page/object-models/render-tree.md'
+  # - User Guide :
+  #     - Getting Started : 'user-guide/getting-started.md'
+  # - Objects :
+  #     - Browser Window : 'objects/browser-window.md'
+  #     - Page : 'objects/page.md'
+  # - Page :
+  #     - scripts : 'page/scripts.md'
+  #     - css : 'page/css.md'
+  #     - html : 'page/html.md'
+  #     - Object Models :
+  #         - CSSOM : 'page/object-models/cssom.md'
+  #         - DOM : 'page/object-models/dom.md'
+  #         - Render Tree : 'page/object-models/render-tree.md'
   - Utilities :
       - Asynchronous : 'utilities/asynchronous.md'
       - File System : 'utilities/fs.md'
