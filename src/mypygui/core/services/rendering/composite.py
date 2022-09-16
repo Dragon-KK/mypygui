@@ -20,7 +20,7 @@ class Composite:
 
         if listen_keyboard:
             self.canvas.focus_set()
-            self.canvas.bind('<Key>', lambda e:self.composited_element.dom_node.event_emitter.dispatch(Event(Event.Types.key_press, self.composited_element.dom_node, True, opposite_direction =True, _e = e)))
+            self.canvas.bind('<Key>', lambda e:self.composited_element.dom_node.event_emitter.dispatch(Event(Event.Types.key_press, self.composited_element.dom_node, True, opposite_direction =True, _e = e)) if self.composited_element is not None else 0)
 
     def scroll_y(self, amount):
         '''Scrolls in the y direction'''

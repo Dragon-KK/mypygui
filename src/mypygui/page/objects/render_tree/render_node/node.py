@@ -218,6 +218,7 @@ class RenderNode(Object):
         '''Removes the element from the render tree and removes the element visually'''
         if self.own_composite is not None:
             self.own_composite.canvas.unbind_all(ALL)
+            
             self.own_composite.composited_element = None
             self.own_composite.canvas.forget()
         if self.master is not None:

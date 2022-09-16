@@ -77,6 +77,7 @@ class Page:
         self.cssom.clear()
         self.cssom = None
         self.script_globals.clear()
+        self.browser_window.active_page = None
         
         self.browser_window.resource_handler.reset()
         gc.collect()

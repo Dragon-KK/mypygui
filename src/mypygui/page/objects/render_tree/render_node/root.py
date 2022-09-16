@@ -16,7 +16,6 @@ class RootRenderNode(RenderNode):
         self.closest_relative = self
         self.dom_node : RootDOMNode
         self._window_provider : WindowProvider = None
-
         
     def set_units(self):
         '''Sets the multipliers of css units'''
