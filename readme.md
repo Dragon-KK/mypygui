@@ -49,6 +49,7 @@ A list of all supported css properties
 - `right`
 - `bottom`
 - `left`
+- `aspect-ratio`
 - `height`
 - `width`
 - `max-heigth`
