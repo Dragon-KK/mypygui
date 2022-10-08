@@ -472,6 +472,16 @@ def left(values : list) -> dict[css.PropertyName, css.Value]:
         'left' : size[0]
     }
 
+def aspect_ratio(values : list) -> dict[css.PropertyName, css.Value]:
+    '''Parse the `aspect_ratio` value into a dict containing the needed property'''
+    succesful, size = expect(values, 'aspect_ratio', (
+        (VALUE.size, 2, True),
+    ))
+    
+    if not succesful or not size:return {}
+    return {
+        'aspect_ratio' : (size[0][0], (size[1][0] if len(size) == 2 else 1))
+    }
 
 def height(values : list) -> dict[css.PropertyName, css.Value]:
     '''Parse the `height` value into a dict containing the needed property'''
@@ -838,6 +848,7 @@ def validate(rule_name : css.PropertyName, value_tokens : list) -> dict[css.Prop
     elif rule_name == 'left':return left(value_tokens)
     elif rule_name == 'height':return height(value_tokens)
     elif rule_name == 'width':return width(value_tokens)
+    elif rule_name == 'aspect_ratio':return aspect_ratio(value_tokens)
     elif rule_name == 'max_heigth':return max_heigth(value_tokens)
     elif rule_name == 'max_width':return max_width(value_tokens)
     elif rule_name == 'min_height':return min_height(value_tokens)
@@ -864,5 +875,5 @@ def validate(rule_name : css.PropertyName, value_tokens : list) -> dict[css.Prop
     elif rule_name == 'overflow_x':return overflow_x(value_tokens)
     elif rule_name == 'overflow_y':return overflow_y(value_tokens)
     else:
-        console.warn(f'Unsopperted css property {rule_name}')
+        console.warn(f'Unsopperted css property {rule_name}', value_tokens)
         return {}

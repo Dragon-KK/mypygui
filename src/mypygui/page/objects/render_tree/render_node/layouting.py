@@ -84,7 +84,11 @@ class layouter:
                 if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
                     node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right
                     node.layout_information.content_width  = node.layout_information.width - (2 * node.layout_information.border_width) - node.layout_information.padding_left - node.layout_information.padding_right if node.layout_information.width else 0        
-                    
+                
+                if node.layout_information.height is None and node.dom_node.styles.aspect_ratio is not None:
+                    node.layout_information.height = node.layout_information.width * node.dom_node.styles.aspect_ratio[1] / node.dom_node.styles.aspect_ratio[0]
+                    node.layout_information.content_height = node.layout_information.height - node.layout_information.padding_bottom - node.layout_information.padding_top - 2 * node.layout_information.border_width
+                    if node is not skip_node:layouter.validate_size(node) # Validate the size
 
                 if node is not skip_node:layouter.validate_size(node) # Validate the size
                 node.layout_information.x = node.layout_information.margin_left
@@ -137,6 +141,12 @@ class layouter:
                 if node.layout_information.width is None: # If width was not explicitly set, it is implicitly set it
                     node.layout_information.width = line_end - node.layout_information.margin_left - node.layout_information.margin_right - suggested_horizontal_position if node.master.layout_information.content_width is not None and node.master.layout_information.content_width > 0 else 0
                     node.layout_information.content_width  = node.layout_information.width - (2 * node.layout_information.border_width) - node.layout_information.padding_left - node.layout_information.padding_right if node.layout_information.width else 0        
+                
+                if node.layout_information.height is None and node.dom_node.styles.aspect_ratio is not None:
+                    node.layout_information.height = node.layout_information.width * node.dom_node.styles.aspect_ratio[1] / node.dom_node.styles.aspect_ratio[0]
+                    node.layout_information.content_height = node.layout_information.height - node.layout_information.padding_bottom - node.layout_information.padding_top - 2 * node.layout_information.border_width
+                    if node is not skip_node:layouter.validate_size(node) # Validate the size
+
                 if node is not skip_node:layouter.validate_size(node) # Validate any height or width set
                 content_size = layouter.layout_children(node, node.layout_information.content_width if node.layout_information.content_width is not None else (line_end - suggested_horizontal_position - node.layout_information.margin_left), skip_node=skip_node) if node is not skip_node else (node.layout_information.content_width, node.layout_information.content_height)
                 

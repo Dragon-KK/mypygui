@@ -30,6 +30,7 @@ class StyleContainer(Object):
         right                      : css.DimensionalValue = None,
         bottom                     : css.DimensionalValue = None,
         left                       : css.DimensionalValue = None,
+        aspect_ratio               : (css.NumberValue, css.NumberValue) = None,
         height                     : css.DimensionalValue = None,
         width                      : css.DimensionalValue = None,
         max_heigth                 : css.DimensionalValue = None,
@@ -84,6 +85,7 @@ class StyleContainer(Object):
         if bottom is not None:self.bottom : css.DimensionalValue = bottom
         if left is not None:self.left : css.DimensionalValue = left
         
+        if aspect_ratio is not None:self.aspect_ratio : (css.NumberValue, css.NumberValue) = aspect_ratio
         if height is not None:self.height : css.DimensionalValue = height
         if width is not None:self.width : css.DimensionalValue = width
         if max_heigth is not None:self.max_heigth : css.DimensionalValue = max_heigth
@@ -149,6 +151,7 @@ class StyleContainer(Object):
             "right" : self.right,
             "bottom" : self.bottom,
             "left" : self.left,
+            "aspect_ratio" : self.aspect_ratio,
             "height" : self.height,
             "width" : self.width,
             "max_heigth" : self.max_heigth,
@@ -193,6 +196,7 @@ class StyleContainer(Object):
         self.right                      = None
         self.bottom                     = None
         self.left                       = None
+        self.aspect_ratio               = None
         self.height                     = None
         self.width                      = None
         self.max_heigth                 = None
