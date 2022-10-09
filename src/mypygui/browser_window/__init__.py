@@ -50,6 +50,8 @@ class BrowserWindow:
         self.tmp_store = Object()
         '''A dictionary that persists between page loads'''
 
+        
+
         try:
             self.window_provider.run() # Start the window provider
             self.worker.run() # Start the resource manager      
@@ -88,6 +90,7 @@ class BrowserWindow:
         NOTE: Returns an always resolved promise
         '''
         self.active_page = None # Set the active page
+        self.window_provider.py_components.clear()
         self.active_page = Page.from_raw(raw, uri, self)
 
         # Reset service providers

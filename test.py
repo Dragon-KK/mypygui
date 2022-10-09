@@ -16,7 +16,7 @@ browser_window = mypygui.BrowserWindow()
 
 # Maybe allow some premade animations like 'particle', 'bubble' etc. ?
 
-my_uri = mypygui.fs.URI.from_local_path_string(__file__).parent.join('examples/html', 'index.html')
+my_uri = mypygui.fs.URI.from_local_path_string(__file__).parent.join('examples/html', 'svg_test.html')
 browser_window.on_ready\
 .then(
     lambda _: browser_window.load_page(

@@ -4,6 +4,7 @@ from ..logging import console
 from .objects.dom import Location
 from ..util import functions
 from ..core import fs
+from .py_component import PyComponent
 from ..core.services.events import Event
 from .page_loader_helper import link_dom
 
@@ -30,12 +31,24 @@ def create_from_raw(raw : str, uri : fs.URI, browser_window) -> tuple:
             if node.tag == 'style':
                 style_sheets.append(css_parser.parse_sheet_from_raw(node.content))
                 return None
-            elif node.tag == 'py-script':
+            elif node.tag == 'script':
                 if node.attrs.src is not None:
                     scripts.append((dom.root_directory._uri.make(node.attrs.src).to_string(), script_parser.parse_script_from_raw(fs.load(dom.root_directory._uri.make(node.attrs.src), fs.FileType.text))))
                     return None
                 scripts.append((f'anonymous {anonymous_scripts_loaded[""]}', script_parser.parse_script_from_raw(node.content.strip())))
                 anonymous_scripts_loaded[''] += 1
+                return None
+            elif node.tag == 'component-definition':
+                if node.attrs.src is None:
+                    console.warn('Component definition does not link to any script')
+                    return None
+                g = {'PyComponent' : PyComponent}
+                script = script_parser.parse_script_from_raw(fs.load(dom.root_directory._uri.make(node.attrs.src), fs.FileType.text))
+                exec(script, g)
+                if g.get('register_component') is None:
+                    console.warn('Component definition does not define the required `register_component` function')
+                    return None
+                g['register_component'](window_provider.py_components)
                 return None
             elif node.tag == 'link':
                 if node.attrs.rel == 'stylesheet':

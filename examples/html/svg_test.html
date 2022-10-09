@@ -5,6 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SVG Test</title>
+    <component-definition src="./py_svg.py"></component-definition>
+    <style>
+        body{
+            height: 100vh;
+        }
+        py-svg{
+            display: block;
+            background-color: grey;
+            height: 20%;
+        }
+    </style>
 </head>
 <body>
     <!-- I think svg support can like be an extension of the language -->
@@ -14,10 +25,10 @@
     <!-- py components can be used for things that exist in standard html but are implemented differently over here -->
     <!-- For example svg is going to be implemeneted using 'shapes' and canvas will be implemented using the tkinter canvas etc. -->
 
-    <!-- # TODO:aspect ratio -->
-    <!-- Aspect ratio will just take the elements width and make it the height thats it (before layouting children) -->
+    <!-- TODO: Create a pycomponentRenderNode that will tie all of this in :) -->
     <py-svg>
         <polygon>
+            500 50
         </polygon>
 
     </py-svg>

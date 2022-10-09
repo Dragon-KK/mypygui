@@ -94,3 +94,6 @@ class ImageRenderNode(RenderNode):
     def after_layout(self):
         if self.image is None:return
         self.image.resize(self.layout_information.width, self.layout_information.height)
+
+ImageRenderNode.__register_serializer__()
+ImageRenderNode.__register_deserializer__()

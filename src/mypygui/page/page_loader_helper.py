@@ -1,6 +1,6 @@
 from ..util import functions
 from ..logging import console
-from .objects.render_tree import RootRenderNode, ImageRenderNode, TextRenderNode, RenderNode
+from .objects.render_tree import RootRenderNode, ImageRenderNode, TextRenderNode, RenderNode, PyComponentRenderNode
 
 def link_dom(root, cssom, window_provider, event_handler = None, set_parent = False):
     '''
@@ -29,6 +29,13 @@ def link_dom(root, cssom, window_provider, event_handler = None, set_parent = Fa
             node.render_node = TextRenderNode(node)
             node.render_node._window_provider = window_provider
             return None # Span elements cannot have node children
+        elif node.tag.startswith('py-') and window_provider.py_components.get(node.tag.removeprefix('py-')) is not None:
+            children = node.children
+            node.children = []
+            node.render_node = PyComponentRenderNode(node)
+            node.component = window_provider.py_components[node.tag.removeprefix('py-')].create(node, children)
+            node.render_node._window_provider = window_provider
+            return True
         else:
             node.render_node = RenderNode(node)
             node.render_node._window_provider = window_provider

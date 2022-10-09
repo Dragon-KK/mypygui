@@ -4,6 +4,7 @@ from .....core.asynchronous import Promise
 from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from ...render_tree import RenderNode
+    from ....py_component import PyComponent
 from .style_container import Styles, css
 from .state_maintainers import ClassList, StateContainer
 from .....core.services.events import EventEmitter, Event
@@ -44,7 +45,8 @@ class DOMNode(Object):
         styles      : StyleContainer = None,
         render_node : RenderNode     = None,
         content     : str            = None,
-        image       : Promise        = None
+        image       : Promise        = None,
+        component   : PyComponent    = None
     ):
         super().__init__()
         # Heirarchy
@@ -88,6 +90,12 @@ class DOMNode(Object):
         '''
         The image content in the element
         NOTE: Only the image of an image element is shown
+        '''
+
+        self.component = component
+        '''
+        The component object
+        NOTE: Only components have this property set
         '''
 
         self.event_emitter = EventEmitter(self)
@@ -172,8 +180,12 @@ class DOMNode(Object):
             child.remove(_reflow=False, _remove_from_parent=False)
 
         # Remove from render tree
-        master = self.render_node.master
-        self.render_node.remove()
+        if self.render_node is not None:
+            master = self.render_node.master
+            self.render_node.remove()
+        if self.component is not None:
+            self.component.on_remove()
+            self.component = None
         self.image = None
         # Also remove references from style_container and disable event_emitter
         self.event_emitter.disabled = True

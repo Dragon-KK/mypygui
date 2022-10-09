@@ -1,4 +1,4 @@
-class SVGComponent(PyComponent):
+class SVGComponent:
     def __init__(self):
         self.render_node
         self.dom_node
@@ -10,7 +10,14 @@ class SVGComponent(PyComponent):
         pass
 
     def onrepaint():
+        
+        
         pass
+
+    @classmethod
+    def create(cls, dom_node, children):
+        print(children)
+        return cls()
 
     # The normal node and render node will be created for a pycomponent
     # Dont over complicate
@@ -22,5 +29,6 @@ class SVGComponent(PyComponent):
 
     # PyComponenets are essentiall
 
-def RegisterComponenet(PyComponenetHandler):
-    PyComponenetHandler.register_pycomponent('svg', SVGComponent)
+def register_component(abc):
+    print(abc)
+    abc[1] = 2

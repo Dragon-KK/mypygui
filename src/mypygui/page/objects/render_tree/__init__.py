@@ -1,4 +1,4 @@
-from .render_node import RenderNode, RootRenderNode, ImageRenderNode, TextRenderNode
+from .render_node import RenderNode, RootRenderNode, PyComponentRenderNode, ImageRenderNode, TextRenderNode
 from ....util import Object
 
 class RenderTree(Object):

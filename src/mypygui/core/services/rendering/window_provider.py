@@ -22,6 +22,8 @@ class WindowProvider: # Does this need to be a service provider?
         self.layout_handler = layout_handler
         '''Reference to the layout handler'''
         self.layout_handler.window_provider = self # Give reference of the window provider to the layout handler
+        self.py_components = {}
+        '''Stores the loaded py_component definers'''
 
     def reset(self, root_render_node : RootRenderNode): # Resets the window provider
         '''Resets the window providers'''
