@@ -128,6 +128,7 @@ class Composite:
             render_information.x + render_information.offset_x, render_information.y + render_information.offset_y + render_information.border_top_left_radius,
             render_information.x + render_information.offset_x, render_information.y + render_information.offset_y,
             smooth = True,
+            splinesteps = 32,
             width = render_information.border_stroke, fill = render_information.background_color,
             outline = render_information.border_color
         )

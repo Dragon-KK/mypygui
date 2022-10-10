@@ -13,7 +13,7 @@
         py-svg{
             display: block;
             background-color: grey;
-            height: 20%;
+            height: 100%;
         }
     </style>
 </head>
@@ -27,10 +27,19 @@
 
     <!-- TODO: Create a pycomponentRenderNode that will tie all of this in :) -->
     <py-svg>
-        <polygon>
-            (100, 9)|(100, 8)
+        <polygon class="abc">
+            25:master_height 25:master_height,
+            75:master_height 25:master_height,
+            75:master_height 75:master_height,
+            25:master_height 75:master_height
         </polygon>
-
+        <polygon>
+            40:viewport_width 2.5:viewport_width,
+            20:viewport_width 2.5:viewport_width,
+            20:viewport_width 7.5:viewport_width,
+            40:viewport_width 7.5:viewport_width,
+            20:viewport_width 10:viewport_width
+        </polygon>
     </py-svg>
 
 
