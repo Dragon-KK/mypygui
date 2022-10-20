@@ -31,7 +31,7 @@ def create_from_raw(raw : str, uri : fs.URI, browser_window) -> tuple:
             if node.tag == 'style':
                 style_sheets.append(css_parser.parse_sheet_from_raw(node.content))
                 return None
-            elif node.tag == 'script':
+            elif node.tag == 'pyscript':
                 if node.attrs.src is not None:
                     scripts.append((dom.root_directory._uri.make(node.attrs.src).to_string(), script_parser.parse_script_from_raw(fs.load(dom.root_directory._uri.make(node.attrs.src), fs.FileType.text))))
                     return None

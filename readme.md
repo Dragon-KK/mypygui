@@ -79,8 +79,8 @@ All scripts will be executed globally
 Some dom apis will be given to the scripts
 
 ```html
-<script src="./definitions.py"/>
-<script src="./myscript.py"/>
+<pyscript src="./definitions.py"/>
+<pyscript src="./myscript.py"/>
 ```
 
 eg: `myscript.py`
