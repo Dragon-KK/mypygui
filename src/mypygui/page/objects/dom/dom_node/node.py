@@ -64,7 +64,7 @@ class DOMNode(Object):
         '''A collection of classes associated with the element'''
         self.class_list.element = self
 
-        self.state      = StateContainer(('',)) # `''` implies default state
+        self.state      = StateContainer('') # `''` implies default state
         '''The current state of the element'''
         self.state.element = self
 
@@ -119,12 +119,12 @@ class DOMNode(Object):
                 return xs
         return None
 
-    def get_elements_by_class_name(self, *class_names) -> list[DOMNode]:
+    def get_elements_by_class_name(self, class_name) -> list[DOMNode]:
         '''Get elements which have a given class name'''
         result = []
-        if self.class_list.issuperset(class_names):result.append(self)
+        if self.class_list.contains(class_name):result.append(self)
         for child in self.children:
-            result.extend(child.get_elements_by_class_name(*class_names))
+            result.extend(child.get_elements_by_class_name(class_name))
         return result
 
     def get_elements_by_tag_name(self, tag_name) -> list[DOMNode]:
@@ -204,7 +204,7 @@ class DOMNode(Object):
 
     def __repr__(self):
         class_list = f' class="{" ".join(self.class_list)}"' if self.class_list else ''
-        attrs = ' '.join(f'{key}="{value}"' for key, value in self.attrs.__dict__.items())
+        attrs = ' '.join(f'{key}="{value}"' for key, value in self.attrs.__dict__.items() if key not in ('class'))
         attrs = (' ' + attrs) if attrs else ''
         return f'<{self.tag}{class_list}{attrs}>{f"...({len(self.children)})..." if self.children else ""}</{self.tag}>'
 
@@ -237,11 +237,11 @@ class DOMNode(Object):
 DOMNode.__register_serializer__()
 DOMNode.__register_deserializer__()
 DOMNode.__register_iterable__('ClassList')
-DOMNode.__register_serializer__(custom=ClassList, serializer=lambda v:{'__objecttype__' : 'ClassList', 'ClassList' : list(v)})
-DOMNode.__register_deserializer__(custom=ClassList, deserializer=lambda v:ClassList(v))
+DOMNode.__register_serializer__(custom=ClassList, serializer=lambda v:{'__objecttype__' : 'ClassList', 'ClassList' : list(v.keys())})
+DOMNode.__register_deserializer__(custom=ClassList, deserializer=lambda v:ClassList(*v))
 DOMNode.__register_iterable__('StateContainer')
-DOMNode.__register_serializer__(custom=StateContainer, serializer=lambda v:{'__objecttype__' : 'StateContainer', 'StateContainer' : list(v)})
-DOMNode.__register_deserializer__(custom=StateContainer, deserializer=lambda v:StateContainer(v))
+DOMNode.__register_serializer__(custom=StateContainer, serializer=lambda v:{'__objecttype__' : 'StateContainer', 'StateContainer' : list(v.keys())})
+DOMNode.__register_deserializer__(custom=StateContainer, deserializer=lambda v:StateContainer(*v))
 
 # def on_true_style_change(self):
 #     '''

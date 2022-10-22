@@ -41,7 +41,7 @@ class HTMLParser(HTMLParserBase):
             tag=tag,
             attrs=Object(**attrs),
             id=attrs.get('id') if attrs.get('id') is not None else None,
-            class_list=ClassList() if attrs.get('class') is None else ClassList(attrs['class'].split())
+            class_list=ClassList() if attrs.get('class') is None else ClassList(*attrs['class'].split())
         )
         self.stack[-1].children.append(elem)
         self.stack.append(elem)
@@ -61,7 +61,7 @@ class HTMLParser(HTMLParserBase):
             tag=tag,
             id=attrs.get('id') if attrs.get('id') is not None else None,
             attrs=Object(**dict((k,v if v is not None else True) for k,v in attrs.items())),
-            class_list=ClassList() if attrs.get('class') is None else ClassList(attrs['class'].split())
+            class_list=ClassList() if attrs.get('class') is None else ClassList(*attrs['class'].split())
         )
         self.stack[-1].children.append(elem)        
 

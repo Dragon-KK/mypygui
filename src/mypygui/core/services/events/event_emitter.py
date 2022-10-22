@@ -64,7 +64,8 @@ class EventEmitter:
         '''
         is_child_event = event.target != self.target
         for subscriber in self.subscribers.get(event.type, ()):
-            if (not is_child_event) or subscriber[1]:subscriber[0](event)
+            if (not is_child_event) or subscriber[1]:
+                subscriber[0](event)
 
     def propogate(self, event : Event):
         '''

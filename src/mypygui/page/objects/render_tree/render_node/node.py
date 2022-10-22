@@ -131,6 +131,7 @@ class RenderNode(Object):
             # Absolute elements are slaves to the closest element with `position: relative`
             closest_relative.add_slave(self, self.dom_node.styles.z_index if self.dom_node.styles.z_index is not None else 1)
             self.master = closest_relative
+            closest_relative = self
         elif self.dom_node.styles.position == css.Position.fixed:
             # Fixed elements are slaves to the root
             root.add_slave(self, self.dom_node.styles.z_index if self.dom_node.styles.z_index is not None else 1)

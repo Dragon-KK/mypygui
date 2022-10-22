@@ -209,7 +209,13 @@ class layouter:
                     if slave.dom_node.styles.position is not css.Position.static and slave.dom_node.styles.position is not css.Position.relative:
 
                         layouter.layout_node(slave, 0, 0, 0, 0, 0, 0, node.layout_information.content_width, skip_node=skip_node)
-
+            if (node.dom_node.styles.position == css.Position.absolute) or (node.dom_node.styles.position == css.Position.fixed):
+                # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
+                left, right = node.get_value(node.dom_node.styles.left, None), node.get_value(node.dom_node.styles.right, None)
+                top, bottom = node.get_value(node.dom_node.styles.top, None), node.get_value(node.dom_node.styles.bottom, None)
+                node.layout_information.x = left if left is not None else ((node.master.layout_information.width-right-node.layout_information.width) if right is not None else 0)
+                node.layout_information.y = top if top is not None else ((node.master.layout_information.height-bottom-node.layout_information.height) if bottom is not None else 0)
+                
             return (
                 (node.layout_information.x, node.layout_information.y),
                 (node.layout_information.width, node.layout_information.height),
@@ -218,6 +224,7 @@ class layouter:
                 next_on_new_line
             )
         except Exception as e:
+            import traceback
             traceback.print_exc()
             node.dom_node._visible = False
             return (0, 0), (0, 0), (0, 0), False, False
@@ -255,15 +262,17 @@ class layouter:
             node.layout_information.y += top if top is not None else (-bottom if bottom is not None else 0)
             return
         else:
+            if node.layout_information.width is None or node.layout_information.height is None:return
             node.layout_information.x = left if left is not None else ((node.master.layout_information.width-right-node.layout_information.width) if right is not None else 0)
             node.layout_information.y = top if top is not None else ((node.master.layout_information.height-bottom-node.layout_information.height) if bottom is not None else 0)
             return 
         
     @staticmethod
     def set_offset_2(node : RenderNode):
+        # LIMIT: At some point remove the 2 differnet functions for setting position business
         node.layout_information.offset_x = node.get_value(node.dom_node.styles.transform_origin_x)
         node.layout_information.offset_y = node.get_value(node.dom_node.styles.transform_origin_y)
-
+        
 
     @staticmethod
     def layout_children(

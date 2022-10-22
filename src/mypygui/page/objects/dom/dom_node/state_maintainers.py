@@ -3,14 +3,29 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from ..dom_node import DOMNode
 
-class ClassList(set):
+class MySet(dict):
+    def __init__(self, *args):
+        super().__init__((i, True) for i in args)
+
+    def add(self, v):
+        self[v] = True
+
+    def remove(self, v):
+        if v in self:del self[v]
+
+    def contains(self, v):
+        return v in self
+
+    def issuperset(self, other):
+        return set(self.values()).issuperset(other)
+    
+class ClassList(MySet):
     '''
     Stores the classes attributed to an element
-    NOTE: The classes are stored unordered
     '''
     def __init__(self,*args):
         super().__init__(*args)
-        self.element :DOMNode= None
+        self.element :DOMNode = None
 
     def add(self, cls, update_styles = True):
         if cls in self:return
@@ -34,10 +49,9 @@ class ClassList(set):
     def __sub__(self, cls):
         self.remove(cls)
 
-class StateContainer(set):
+class StateContainer(MySet):
     '''
     Stores the current state of the element
-    NOTE: Order isn't of importance
     '''
     def __init__(self, *args):
         super().__init__(*args)
