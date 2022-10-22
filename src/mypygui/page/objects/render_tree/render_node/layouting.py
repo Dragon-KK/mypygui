@@ -207,7 +207,7 @@ class layouter:
             for i in node.slaves.values():
                 for slave in i:
                     if slave.dom_node.styles.position is not css.Position.static and slave.dom_node.styles.position is not css.Position.relative:
-                        print(slave.dom_node)
+
                         layouter.layout_node(slave, 0, 0, 0, 0, 0, 0, node.layout_information.content_width, skip_node=skip_node)
 
             return (
@@ -255,8 +255,8 @@ class layouter:
             node.layout_information.y += top if top is not None else (-bottom if bottom is not None else 0)
             return
         else:
-            node.layout_information.x = left if left is not None else ((node.master.layout_information.content_size_width-right-node.layout_information.width) if right is not None else 0)
-            node.layout_information.y = top if top is not None else ((node.master.layout_information.content_size_height-bottom-node.layout_information.height) if bottom is not None else 0)
+            node.layout_information.x = left if left is not None else ((node.master.layout_information.width-right-node.layout_information.width) if right is not None else 0)
+            node.layout_information.y = top if top is not None else ((node.master.layout_information.height-bottom-node.layout_information.height) if bottom is not None else 0)
             return 
         
     @staticmethod
