@@ -242,11 +242,19 @@ class layouter:
         right = 0
         top = None
         bottom = 0
-        if node.dom_node.styles.position != css.Position.static: # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
-            left, right = node.get_value(node.dom_node.styles.left, None), node.get_value(node.dom_node.styles.right)
-            top, bottom = node.get_value(node.dom_node.styles.top, None), node.get_value(node.dom_node.styles.bottom)
-        node.layout_information.x += left if left is not None else -right
-        node.layout_information.y += top if top is not None else -bottom
+        if node.dom_node.styles.position == css.Position.static:
+            return
+        # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
+        left, right = node.get_value(node.dom_node.styles.left, None), node.get_value(node.dom_node.styles.right)
+        top, bottom = node.get_value(node.dom_node.styles.top, None), node.get_value(node.dom_node.styles.bottom)
+        if node.dom_node.styles.position == css.Position.relative:
+            node.layout_information.x += left if left is not None else -right
+            node.layout_information.y += top if top is not None else -bottom
+            return
+        else:
+            node.layout_information.x = left if left is not None else node.master.layout_information.content_size_width-right-node.layout_information.width
+            node.layout_information.y = top if top is not None else node.master.layout_information.content_size_height-bottom-node.layout_information.height
+            return 
         
     @staticmethod
     def set_offset_2(node : RenderNode):
