@@ -69,6 +69,7 @@ class layouter:
     ):
         # LIMIT: This is kind of jank
         try:
+            
             is_on_new_line = False
             next_on_new_line = False
             #region get sizes based on display
@@ -203,6 +204,12 @@ class layouter:
             node.dom_node._visible = True
             layouter.set_render_info_size(node)
             node.after_layout()
+            for i in node.slaves.values():
+                for slave in i:
+                    if slave.dom_node.styles.position is not css.Position.static and slave.dom_node.styles.position is not css.Position.relative:
+                        print(slave.dom_node)
+                        layouter.layout_node(slave, 0, 0, 0, 0, 0, 0, node.layout_information.content_width, skip_node=skip_node)
+
             return (
                 (node.layout_information.x, node.layout_information.y),
                 (node.layout_information.width, node.layout_information.height),
@@ -210,7 +217,8 @@ class layouter:
                 is_on_new_line,
                 next_on_new_line
             )
-        except:
+        except Exception as e:
+            traceback.print_exc()
             node.dom_node._visible = False
             return (0, 0), (0, 0), (0, 0), False, False
 
@@ -237,23 +245,18 @@ class layouter:
     def set_offset_1(node : RenderNode):
         '''Offsets the position of the element according to its left top right bottom values'''
         node.set_units()
-
-        left = None
-        right = 0
-        top = None
-        bottom = 0
         if node.dom_node.styles.position == css.Position.static:
             return
         # Any non staticly positioned element is allowed to have a say in its position (by offsetting itself)
-        left, right = node.get_value(node.dom_node.styles.left, None), node.get_value(node.dom_node.styles.right)
-        top, bottom = node.get_value(node.dom_node.styles.top, None), node.get_value(node.dom_node.styles.bottom)
+        left, right = node.get_value(node.dom_node.styles.left, None), node.get_value(node.dom_node.styles.right, None)
+        top, bottom = node.get_value(node.dom_node.styles.top, None), node.get_value(node.dom_node.styles.bottom, None)
         if node.dom_node.styles.position == css.Position.relative:
-            node.layout_information.x += left if left is not None else -right
-            node.layout_information.y += top if top is not None else -bottom
+            node.layout_information.x += left if left is not None else (-right if right is not None else 0)
+            node.layout_information.y += top if top is not None else (-bottom if bottom is not None else 0)
             return
         else:
-            node.layout_information.x = left if left is not None else node.master.layout_information.content_size_width-right-node.layout_information.width
-            node.layout_information.y = top if top is not None else node.master.layout_information.content_size_height-bottom-node.layout_information.height
+            node.layout_information.x = left if left is not None else ((node.master.layout_information.content_size_width-right-node.layout_information.width) if right is not None else 0)
+            node.layout_information.y = top if top is not None else ((node.master.layout_information.content_size_height-bottom-node.layout_information.height) if bottom is not None else 0)
             return 
         
     @staticmethod
@@ -298,8 +301,9 @@ class layouter:
 
         # skip_node = None
         for child in node.dom_node.children:
-            if child.render_node.master is not node:
-                layouter.layout_node(child.render_node, 0, 0, 0, 0, 0, 0, child.render_node.master.layout_information.content_width, skip_node=skip_node)
+            if child.styles.position is not css.Position.static and child.styles.position is not css.Position.relative:
+                
+                # layouter.layout_node(child.render_node, 0, 0, 0, 0, 0, 0, child.render_node.master.layout_information.content_width, skip_node=skip_node)
                 continue
             position, size, margin, on_new_line, force_new_line = layouter.layout_node(
                 child.render_node, child_current_line, 
